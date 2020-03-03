@@ -23,5 +23,5 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/course_subscribe"
-        android:textSize="24sp" />
+        android:textSize="21sp" />
 </LinearLayout>

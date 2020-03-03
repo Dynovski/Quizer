@@ -9,21 +9,31 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.Course;
+import project.android.course.quizer.firebaseObjects.User;
+import project.android.course.quizer.singletons.CurrentUser;
 
 // Course adapter creates views for course list items and replaces the content of some of the views
 // with new data items when the original item is no longer visible
 public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdapter.StudentCourseViewHolder>
 {
     private final LayoutInflater inflater;
-    private List<Course> courses;
+    private List<Course> allCourses;
+    private List<String> subscribedCourses;
     private Context applicationContext;
 
     class StudentCourseViewHolder extends RecyclerView.ViewHolder
@@ -44,7 +54,8 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
     {
         applicationContext = context;
         inflater = LayoutInflater.from(context);
-        courses = new ArrayList<Course>();
+        allCourses = new ArrayList<>();
+        subscribedCourses = new ArrayList<>();
     }
 
 
@@ -61,15 +72,54 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
     @Override
     public void onBindViewHolder(@NonNull StudentCourseViewHolder holder, int position)
     {
-        if(courses != null)
+        if(allCourses != null)
         {
-            Course current = courses.get(position);
+            Course current = allCourses.get(position);
             holder.name.setText(current.getCourseName());
-            holder.enrolledInfo.setText(R.string.course_subscribe);
+            if(subscribedCourses.contains(current.getCourseName()))
+                holder.enrolledInfo.setText(R.string.course_unsubscribe);
+            else
+                holder.enrolledInfo.setText(R.string.course_subscribe);
+            //TODO: UPRZATNAC
             holder.enrolledInfo.setOnClickListener(v -> {
-                holder.enrolledInfo.setText(holder.enrolledInfo.getText().toString().equals("Subscribe") ?
-                        R.string.course_unsubscribe : R.string.course_subscribe);
-                // MARK SUBSCRIPTION IN DATABASE
+                if(holder.enrolledInfo.getText().toString().equals(applicationContext.getResources().getString(R.string.course_subscribe)))
+                {
+                    holder.enrolledInfo.setText(R.string.course_unsubscribe);
+                    Map<String, Object> newSubscribedCourse = new HashMap<>();
+                    newSubscribedCourse.put("courseName", current.getCourseName());
+                    FirebaseFirestore.getInstance().collection("Users")
+                            .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .collection("SubscribedCourses").document().set(newSubscribedCourse);
+                    FirebaseFirestore.getInstance().collection("Courses")
+                            .whereEqualTo("courseName", current.getCourseName())
+                            .get().addOnSuccessListener(queryDocumentSnapshots -> queryDocumentSnapshots.getDocuments().get(0).getReference()
+                                    .collection("EnrolledStudents").document()
+                                    .set(CurrentUser.getCurrentUser()))
+                            .addOnFailureListener(e -> {
+                                e.printStackTrace();
+                            });
+                }
+                else
+                {
+                    holder.enrolledInfo.setText(R.string.course_subscribe);
+                    FirebaseFirestore.getInstance().collection("Users")
+                            .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .collection("SubscribedCourses").whereEqualTo("courseName", current.getCourseName())
+                            .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                                queryDocumentSnapshots.getDocuments().get(0).getReference().delete();
+                            })
+                            .addOnFailureListener( e -> e.printStackTrace());
+                    FirebaseFirestore.getInstance().collection("Courses")
+                            .whereEqualTo("courseName", current.getCourseName())
+                            .get().addOnSuccessListener(queryDocumentSnapshots -> queryDocumentSnapshots.getDocuments().get(0).getReference()
+                                .collection("EnrolledStudents").whereEqualTo("name", CurrentUser.getCurrentUser().getName())
+                                .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
+                                    queryDocumentSnapshots1.getDocuments().get(0).getReference().delete();
+                                })
+                                    .addOnFailureListener(e -> e.printStackTrace()))
+                            .addOnFailureListener(e -> e.printStackTrace());
+                }
+
             });
         }
     }
@@ -81,12 +131,21 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
         super.onViewRecycled(holder);
     }
 
-    public void setCourses(QuerySnapshot snapshot)
+    public void setAllCourses(QuerySnapshot snapshot)
     {
         List<DocumentSnapshot> documents = snapshot.getDocuments();
-        this.courses.clear();
+        this.allCourses.clear();
         for(DocumentSnapshot document : documents)
-            this.courses.add(document.toObject(Course.class));
+            this.allCourses.add(document.toObject(Course.class));
+        notifyDataSetChanged();
+    }
+
+    public void setSubscribedCourses(QuerySnapshot snapshot)
+    {
+        List<DocumentSnapshot> documents = snapshot.getDocuments();
+        this.subscribedCourses.clear();
+        for(DocumentSnapshot document : documents)
+            this.subscribedCourses.add((String) document.get("courseName"));
         notifyDataSetChanged();
     }
 
@@ -94,8 +153,8 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
     @Override
     public int getItemCount()
     {
-        if(courses != null)
-            return courses.size();
+        if(allCourses != null)
+            return allCourses.size();
         else
             return 0;
     }
