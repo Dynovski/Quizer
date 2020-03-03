@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.TeacherCoursesActivity"></activity>
+        <activity android:name=".activities.CreateTestActivity"></activity>
+        <activity android:name=".activities.TeacherCoursesActivity" />
         <activity android:name=".activities.AllCoursesActivity" />
         <activity android:name=".activities.UserAccountActivity" />
         <activity android:name=".activities.TeacherHomeScreenActivity" />

@@ -31,4 +31,20 @@
     <string name="button_cancel">Cancel</string>
     <string name="teacher_add_course_hint">Course name</string>
     <string name="teacher_add_course_info">Type name of the course that you wish to create</string>
+    <string name="create_test_choose_name">Choose name for the new test</string>
+    <string name="create_test_choose_due_date">Choose deadline for this test</string>
+    <string name="create_test_test_name_hint">Test name</string>
+    <string name="create_name_date_hint">dd-mm-yyyy</string>
+    <string name="create_test_question_prompt">Type question text</string>
+    <string name="create_test_button_answers">Add answers</string>
+    <string name="create_test_answer1">Answer 1</string>
+    <string name="create_test_answer2">Answer 2</string>
+    <string name="create_test_answer3">Answer 3</string>
+    <string name="create_test_answer4">Answer 4</string>
+    <string name="create_test_correct">Correct</string>
+    <string name="create_test_create">Create test</string>
+    <string name="button_next">Next</string>
+    <string name="button_edit">Edit</string>
+    <string name="answer_hint">Write answer here</string>
+    <string name="create_test_num_of_questions">Choose number of questions</string>
 </resources>

@@ -23,6 +23,7 @@ public class TeacherCoursesActivity extends AppCompatActivity
         setContentView(R.layout.activity_list_of_courses_acitvity);
 
         RecyclerView recyclerView = findViewById(R.id.coursesRecycleView);
+        recyclerView.setHasFixedSize(true);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TeacherCourseAdapter(this);
