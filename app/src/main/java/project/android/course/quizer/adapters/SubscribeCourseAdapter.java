@@ -84,37 +84,26 @@ public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourse
 
                     FirebaseFirestore.getInstance().collection("Users")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .collection("SubscribedCourses").document().set(current);
+                            .collection("SubscribedCourses").document(current.getCourseName()).set(current);
+
                     FirebaseFirestore.getInstance().collection("Courses")
-                            .whereEqualTo("courseName", current.getCourseName())
-                            .get().addOnSuccessListener(queryDocumentSnapshots -> queryDocumentSnapshots.getDocuments().get(0).getReference()
-                                    .collection("EnrolledStudents").document()
-                                    .set(CurrentUser.getCurrentUser()))
-                            .addOnFailureListener(e -> {
-                                e.printStackTrace();
-                            });
+                            .document(current.getCourseName()).collection("EnrolledStudents")
+                            .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .set(CurrentUser.getCurrentUser());
                 }
                 else
                 {
                     holder.enrolledInfo.setText(R.string.course_subscribe);
                     FirebaseFirestore.getInstance().collection("Users")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .collection("SubscribedCourses").whereEqualTo("courseName", current.getCourseName())
-                            .get().addOnSuccessListener(queryDocumentSnapshots -> {
-                                queryDocumentSnapshots.getDocuments().get(0).getReference().delete();
-                            })
-                            .addOnFailureListener( e -> e.printStackTrace());
-                    FirebaseFirestore.getInstance().collection("Courses")
-                            .whereEqualTo("courseName", current.getCourseName())
-                            .get().addOnSuccessListener(queryDocumentSnapshots -> queryDocumentSnapshots.getDocuments().get(0).getReference()
-                                .collection("EnrolledStudents").whereEqualTo("name", CurrentUser.getCurrentUser().getName())
-                                .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
-                                    queryDocumentSnapshots1.getDocuments().get(0).getReference().delete();
-                                })
-                                    .addOnFailureListener(e -> e.printStackTrace()))
-                            .addOnFailureListener(e -> e.printStackTrace());
-                }
+                            .collection("SubscribedCourses").document(current.getCourseName())
+                            .delete();
 
+                    FirebaseFirestore.getInstance().collection("Courses")
+                            .document(current.getCourseName()).collection("EnrolledStudents")
+                            .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .delete();
+                }
             });
         }
     }

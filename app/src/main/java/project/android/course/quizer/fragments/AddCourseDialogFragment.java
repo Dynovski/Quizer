@@ -28,7 +28,7 @@ public class AddCourseDialogFragment extends DialogFragment
 {
     private static final String TAG = "ADD_COURSE_DIALOG_DEBUG";
     private FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
-    private final CollectionReference coursesCollectionRef = mDatabase.collection("Courses");
+    private final CollectionReference coursesRef = mDatabase.collection("Courses");
     private EditText courseNameEditText;
     private Button addButton;
     private Button cancelButton;
@@ -37,7 +37,7 @@ public class AddCourseDialogFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_create_course_dialog, null);
         builder.setView(view);
@@ -62,7 +62,7 @@ public class AddCourseDialogFragment extends DialogFragment
     private void executeBatchedWrite(String newCourseName, Context context)
     {
         WriteBatch batch = mDatabase.batch();
-        DocumentReference newCourse = coursesCollectionRef.document();
+        DocumentReference newCourse = coursesRef.document(newCourseName);
         batch.set(newCourse, new Course(newCourseName, CurrentUser.getCurrentUser().getName()));
         batch.commit()
                 .addOnSuccessListener(documentReference ->

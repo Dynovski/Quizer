@@ -51,7 +51,7 @@ public class CreateTestActivity extends AppCompatActivity
 
         mDatabase = FirebaseFirestore.getInstance();
         // TODO: ZMIENIĆ ZEBY KURS NIE BYŁ HARDCODED
-        testsRef = mDatabase.collection("Courses").document("LGyT7vxclwOaoSJVdqqo")
+        testsRef = mDatabase.collection("Courses").document("Logic")
                 .collection("Tests");
 
         tabLayout = findViewById(R.id.tab_layout);
