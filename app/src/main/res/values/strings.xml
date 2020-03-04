@@ -47,4 +47,7 @@
     <string name="button_edit">Edit</string>
     <string name="answer_hint">Write answer here</string>
     <string name="create_test_num_of_questions">Choose number of questions</string>
+    <string name="course_name">Course name</string>
+    <string name="teacher_name">Teacher name</string>
+    <string name="course_description">Description</string>
 </resources>

@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import project.android.course.quizer.R;
-import project.android.course.quizer.adapters.TeacherCourseAdapter;
+import project.android.course.quizer.adapters.CourseAdapter;
 import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 
 public class TeacherCoursesActivity extends AppCompatActivity
 {
-    private TeacherCourseAdapter adapter;
+    private CourseAdapter adapter;
     private TeacherCoursesViewModel teacherCoursesViewModel;
 
     @Override
@@ -26,7 +26,7 @@ public class TeacherCoursesActivity extends AppCompatActivity
         recyclerView.setHasFixedSize(true);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TeacherCourseAdapter(this);
+        adapter = new CourseAdapter(this);
         recyclerView.setAdapter(adapter);
 
         teacherCoursesViewModel = new ViewModelProvider(this).get(TeacherCoursesViewModel.class);

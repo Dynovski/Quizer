@@ -9,10 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -24,24 +21,23 @@ import java.util.Map;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.Course;
-import project.android.course.quizer.firebaseObjects.User;
 import project.android.course.quizer.singletons.CurrentUser;
 
 // Course adapter creates views for course list items and replaces the content of some of the views
 // with new data items when the original item is no longer visible
-public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdapter.StudentCourseViewHolder>
+public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourseAdapter.SubscribeCourseViewHolder>
 {
     private final LayoutInflater inflater;
     private List<Course> allCourses;
     private List<String> subscribedCourses;
     private Context applicationContext;
 
-    class StudentCourseViewHolder extends RecyclerView.ViewHolder
+    class SubscribeCourseViewHolder extends RecyclerView.ViewHolder
     {
         private final TextView name;
         private final TextView enrolledInfo;
 
-        public StudentCourseViewHolder(@NonNull View itemView)
+        public SubscribeCourseViewHolder(@NonNull View itemView)
         {
             super(itemView);
             name = itemView.findViewById(R.id.text_view_course_name);
@@ -50,7 +46,7 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
 
     }
 
-    public StudentCourseAdapter(Context context)
+    public SubscribeCourseAdapter(Context context)
     {
         applicationContext = context;
         inflater = LayoutInflater.from(context);
@@ -62,15 +58,15 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public StudentCourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public SubscribeCourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View itemView = inflater.inflate(R.layout.course_item_student, parent, false);
-        return new StudentCourseViewHolder(itemView);
+        return new SubscribeCourseViewHolder(itemView);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull StudentCourseViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull SubscribeCourseViewHolder holder, int position)
     {
         if(allCourses != null)
         {
@@ -85,11 +81,10 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
                 if(holder.enrolledInfo.getText().toString().equals(applicationContext.getResources().getString(R.string.course_subscribe)))
                 {
                     holder.enrolledInfo.setText(R.string.course_unsubscribe);
-                    Map<String, Object> newSubscribedCourse = new HashMap<>();
-                    newSubscribedCourse.put("courseName", current.getCourseName());
+
                     FirebaseFirestore.getInstance().collection("Users")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .collection("SubscribedCourses").document().set(newSubscribedCourse);
+                            .collection("SubscribedCourses").document().set(current);
                     FirebaseFirestore.getInstance().collection("Courses")
                             .whereEqualTo("courseName", current.getCourseName())
                             .get().addOnSuccessListener(queryDocumentSnapshots -> queryDocumentSnapshots.getDocuments().get(0).getReference()
@@ -125,7 +120,7 @@ public class StudentCourseAdapter extends RecyclerView.Adapter<StudentCourseAdap
     }
 
     @Override
-    public void onViewRecycled(@NonNull StudentCourseViewHolder holder)
+    public void onViewRecycled(@NonNull SubscribeCourseViewHolder holder)
     {
         holder.enrolledInfo.setOnClickListener(null);
         super.onViewRecycled(holder);

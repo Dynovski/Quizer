@@ -5,13 +5,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 
-public class AllCoursesRepository
+public class ListOfCoursesRepository
 {
     private static final CollectionReference COURSES_REFERENCE =
             FirebaseFirestore.getInstance().collection("Courses");
     private FirebaseQueryLiveData courses;
 
-    public AllCoursesRepository()
+    public ListOfCoursesRepository()
     {
         courses = new FirebaseQueryLiveData(COURSES_REFERENCE);
     }

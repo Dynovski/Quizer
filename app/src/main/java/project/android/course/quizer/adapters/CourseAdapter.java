@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -17,27 +19,28 @@ import java.util.List;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.Course;
+import project.android.course.quizer.fragments.CourseDetailsDialogFragment;
 
-public class TeacherCourseAdapter extends RecyclerView.Adapter<TeacherCourseAdapter.TeacherCourseViewHolder>
+public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder>
 {
     private final LayoutInflater inflater;
     private List<Course> courses;
-    private Context applicationContext;
+    private Context context;
 
-    class TeacherCourseViewHolder extends RecyclerView.ViewHolder
+    class CourseViewHolder extends RecyclerView.ViewHolder
     {
         private final TextView name;
 
-        public TeacherCourseViewHolder(@NonNull View itemView)
+        public CourseViewHolder(@NonNull View itemView)
         {
             super(itemView);
             name = itemView.findViewById(R.id.text_view_course_name);
         }
     }
 
-    public TeacherCourseAdapter(Context context)
+    public CourseAdapter(Context context)
     {
-        applicationContext = context;
+        this.context = context;
         inflater = LayoutInflater.from(context);
         courses = new ArrayList<Course>();
     }
@@ -46,20 +49,25 @@ public class TeacherCourseAdapter extends RecyclerView.Adapter<TeacherCourseAdap
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public TeacherCourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View itemView = inflater.inflate(R.layout.course_item_teacher, parent, false);
-        return new TeacherCourseViewHolder(itemView);
+        return new CourseViewHolder(itemView);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull TeacherCourseViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull CourseViewHolder holder, int position)
     {
         if(courses != null)
         {
             Course current = courses.get(position);
             holder.name.setText(current.getCourseName());
+
+            holder.name.setOnClickListener(v -> {
+                DialogFragment newFragment = new CourseDetailsDialogFragment(current);
+                newFragment.show(((FragmentActivity)context).getSupportFragmentManager(), current.getCourseName() + "DetailDialog");
+            });
         }
     }
 

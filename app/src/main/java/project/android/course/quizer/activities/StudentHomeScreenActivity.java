@@ -20,7 +20,7 @@ public class StudentHomeScreenActivity extends AppCompatActivity implements View
         setContentView(R.layout.activity_student_home_screen);
 
         findViewById(R.id.sign_out_card).setOnClickListener(this);
-        //findViewById(R.id.student_courses_card).setOnClickListener(this);
+        findViewById(R.id.student_courses_card).setOnClickListener(this);
         findViewById(R.id.all_courses_card).setOnClickListener(this);
         findViewById(R.id.my_account_card).setOnClickListener(this);
         //findViewById(R.id.tests_to_do_card).setOnClickListener(this);
@@ -33,6 +33,7 @@ public class StudentHomeScreenActivity extends AppCompatActivity implements View
         switch(view.getId())
         {
             case R.id.student_courses_card:
+                startActivity(new Intent(this, SubscribedCoursesActivity.class));
                 break;
             case R.id.my_account_card:
                 startActivity(new Intent(this, UserAccountActivity.class));
@@ -44,7 +45,7 @@ public class StudentHomeScreenActivity extends AppCompatActivity implements View
                 startActivity(new Intent(this, SignInActivity.class));
                 break;
             case R.id.all_courses_card:
-                startActivity(new Intent(this, AllCoursesActivity.class));
+                startActivity(new Intent(this, ListOfCoursesActivity.class));
                 break;
             case R.id.tests_to_do_card:
                 break;

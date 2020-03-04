@@ -3,7 +3,7 @@ package project.android.course.quizer.viewmodels;
 import androidx.lifecycle.ViewModel;
 
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
-import project.android.course.quizer.repositories.AllCoursesRepository;
+import project.android.course.quizer.repositories.ListOfCoursesRepository;
 
 public class AllCoursesViewModel extends ViewModel
 {
@@ -11,7 +11,7 @@ public class AllCoursesViewModel extends ViewModel
 
     public AllCoursesViewModel()
     {
-        AllCoursesRepository repository = new AllCoursesRepository();
+        ListOfCoursesRepository repository = new ListOfCoursesRepository();
         courses = repository.getCourses();
     }
 
