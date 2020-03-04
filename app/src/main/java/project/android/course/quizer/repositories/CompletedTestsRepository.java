@@ -9,19 +9,18 @@ import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 
 public class CompletedTestsRepository
 {
-    private static final CollectionReference SUBSCRIBED_COURSES_REFERENCE =
+    private static final CollectionReference COMPLETED_TESTS_REFERENCE =
             FirebaseFirestore.getInstance().collection("Users")
                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .collection("SubscribedCourses");
+                    .collection("CompletedTests");
     private FirebaseQueryLiveData completedTests;
 
-    public CompletedTestsRepository(Course course)
+    public CompletedTestsRepository()
     {
-        completedTests = new FirebaseQueryLiveData(SUBSCRIBED_COURSES_REFERENCE
-                .document(course.getCourseName()).collection("CompletedTests"));
+        completedTests = new FirebaseQueryLiveData(COMPLETED_TESTS_REFERENCE);
     }
 
-    public FirebaseQueryLiveData getCourses()
+    public FirebaseQueryLiveData getCompletedTests()
     {
         return completedTests;
     }

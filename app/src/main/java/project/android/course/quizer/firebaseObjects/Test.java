@@ -5,14 +5,16 @@ import com.google.firebase.Timestamp;
 public class Test
 {
     private String testName;
+    private String courseName;
     private Timestamp dueDate;
     private int numOfQuestions;
 
     public Test() {}
 
-    public Test(String testName, Timestamp dueDate, int numOfQuestions)
+    public Test(String testName, String courseName, Timestamp dueDate, int numOfQuestions)
     {
         this.testName = testName;
+        this.courseName = courseName;
         this.dueDate = dueDate;
         this.numOfQuestions = numOfQuestions;
     }
@@ -20,6 +22,11 @@ public class Test
     public String getTestName()
     {
         return testName;
+    }
+
+    public String getCourseName()
+    {
+        return courseName;
     }
 
     public Timestamp getDueDate()

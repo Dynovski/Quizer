@@ -50,14 +50,12 @@ public class CreateTestActivity extends AppCompatActivity
         answers = new ArrayList<>();
 
         mDatabase = FirebaseFirestore.getInstance();
-        // TODO: ZMIENIĆ ZEBY KURS NIE BYŁ HARDCODED
-        testsRef = mDatabase.collection("Courses").document("Logic")
-                .collection("Tests");
+        testsRef = mDatabase.collection("Tests");
 
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TestTitleFragment(), "Choose test name");
+        adapter.addFragment(new TestTitleFragment("Algebra"), "Choose test name");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }

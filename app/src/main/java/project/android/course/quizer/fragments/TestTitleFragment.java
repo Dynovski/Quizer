@@ -29,6 +29,12 @@ public class TestTitleFragment extends Fragment
     private EditText dueDateEditText;
     private EditText numOfQuestionsEditText;
     private CreateTestActivity parentActivity;
+    private String courseName;
+
+    public TestTitleFragment(String courseName)
+    {
+        this.courseName = courseName;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -49,7 +55,7 @@ public class TestTitleFragment extends Fragment
             Date dueDate = null;
             try
             {
-                dueDate = new SimpleDateFormat("dd-MM-yyyy").parse(dueDateEditText.getText().toString().trim());
+                dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(dueDateEditText.getText().toString().trim());
             } catch(ParseException e)
             {
                 Log.d(TAG, "onCreateView: Couldn't format the date\n" + e.toString());
@@ -75,7 +81,7 @@ public class TestTitleFragment extends Fragment
                 return;
             }
 
-            parentActivity.setTest(new Test(testNameEditText.getText().toString().trim(),
+            parentActivity.setTest(new Test(testNameEditText.getText().toString().trim(), courseName,
                     new Timestamp(finalDueDate), Integer.parseInt(numOfQuestions)));
 
             parentActivity.addQuestionFragment();

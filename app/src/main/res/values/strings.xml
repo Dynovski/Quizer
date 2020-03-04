@@ -34,7 +34,7 @@
     <string name="create_test_choose_name">Choose name for the new test</string>
     <string name="create_test_choose_due_date">Choose deadline for this test</string>
     <string name="create_test_test_name_hint">Test name</string>
-    <string name="create_name_date_hint">dd-mm-yyyy</string>
+    <string name="create_name_date_hint">yyyy-MM-dd</string>
     <string name="create_test_question_prompt">Type question text</string>
     <string name="create_test_button_answers">Add answers</string>
     <string name="create_test_answer1">Answer 1</string>
@@ -50,4 +50,5 @@
     <string name="course_name">Course name</string>
     <string name="teacher_name">Teacher name</string>
     <string name="course_description">Description</string>
+    <string name="begin_test">Begin test</string>
 </resources>
