@@ -16,7 +16,7 @@ import project.android.course.quizer.activities.CreateTestActivity;
 import project.android.course.quizer.firebaseObjects.Answer;
 import project.android.course.quizer.firebaseObjects.Question;
 
-public class QuestionFragment extends Fragment
+public class CreateQuestionFragment extends Fragment
 {
     private Button nextButton;
     private EditText answer1EditText;
@@ -31,7 +31,7 @@ public class QuestionFragment extends Fragment
     private CreateTestActivity parentActivity;
     private int questionId;
 
-    public QuestionFragment(int questionId)
+    public CreateQuestionFragment(int questionId)
     {
         this.questionId = questionId;
     }
@@ -40,7 +40,7 @@ public class QuestionFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_create_test_question, container, false);
-        nextButton = view.findViewById(R.id.button_next);
+        nextButton = view.findViewById(R.id.button_save);
         answer1EditText = view.findViewById(R.id.edit_text_answer1);
         answer2EditText = view.findViewById(R.id.edit_text_answer2);
         answer3EditText = view.findViewById(R.id.edit_text_answer3);

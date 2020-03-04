@@ -1,6 +1,7 @@
 package project.android.course.quizer.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.model.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import project.android.course.quizer.R;
-import project.android.course.quizer.firebaseObjects.Course;
+import project.android.course.quizer.activities.SolveTestActivity;
 import project.android.course.quizer.firebaseObjects.Test;
-import project.android.course.quizer.singletons.CurrentUser;
 
 public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.TestViewHolder>
 {
@@ -69,7 +65,11 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
             holder.nameTextView.setText(current.getTestName());
 
             holder.beginTestTextView.setOnClickListener(v -> {
-               //TODO: activity do rozwiązywania testu
+                Intent solveTestIntent = new Intent(applicationContext, SolveTestActivity.class);
+                solveTestIntent.putExtra("TESTNAME", current.getTestName());
+                solveTestIntent.putExtra("NUMOFQUESTIONS", current.getNumOfQuestions());
+                solveTestIntent.putExtra("DEADLINE", current.getDueDate());
+               applicationContext.startActivity(solveTestIntent);
             });
         }
     }

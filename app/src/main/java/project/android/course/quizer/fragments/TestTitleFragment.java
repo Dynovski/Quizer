@@ -40,7 +40,7 @@ public class TestTitleFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_create_test_name, container, false);
-        nextButton =  view.findViewById(R.id.button_next);
+        nextButton =  view.findViewById(R.id.button_save);
         testNameEditText = view.findViewById(R.id.edit_text_test_name);
         dueDateEditText = view.findViewById(R.id.edit_text_test_due_date);
         numOfQuestionsEditText = view.findViewById(R.id.edit_text_num_of_questions);

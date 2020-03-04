@@ -51,4 +51,7 @@
     <string name="teacher_name">Teacher name</string>
     <string name="course_description">Description</string>
     <string name="begin_test">Begin test</string>
+    <string name="solve_test_number_of_questions">Number of questions in this test</string>
+    <string name="solve_test_deadline">Deadline for this test</string>
+    <string name="button_finish">Save</string>
 </resources>

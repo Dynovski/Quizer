@@ -19,12 +19,10 @@ import java.util.ArrayList;
 import project.android.course.quizer.R;
 import project.android.course.quizer.adapters.ViewPagerAdapter;
 import project.android.course.quizer.firebaseObjects.Answer;
-import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.firebaseObjects.Question;
 import project.android.course.quizer.firebaseObjects.Test;
-import project.android.course.quizer.fragments.QuestionFragment;
+import project.android.course.quizer.fragments.CreateQuestionFragment;
 import project.android.course.quizer.fragments.TestTitleFragment;
-import project.android.course.quizer.singletons.CurrentUser;
 
 public class CreateTestActivity extends AppCompatActivity
 {
@@ -93,7 +91,7 @@ public class CreateTestActivity extends AppCompatActivity
 
     public void addQuestionFragment()
     {
-        adapter.addFragment(new QuestionFragment(questionCount++), "Question " + questionCount);
+        adapter.addFragment(new CreateQuestionFragment(questionCount++), "Question " + questionCount);
         adapter.notifyDataSetChanged();
         questions.add(null);
         for(int i = 0; i < 4; i++)
@@ -109,7 +107,7 @@ public class CreateTestActivity extends AppCompatActivity
     private void executeBatchedWrite(Context context)
     {
         WriteBatch batch = mDatabase.batch();
-        DocumentReference newTestDocument = testsRef.document();
+        DocumentReference newTestDocument = testsRef.document(test.getTestName());
         batch.set(newTestDocument, test);
         CollectionReference testQuestionsRef = newTestDocument.collection("Questions");
         int i = 0;
