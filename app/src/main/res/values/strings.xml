@@ -59,4 +59,7 @@
     <string name="add_test_menu_item">Add test</string>
     <string name="edit_course_menu_item">Edit course</string>
     <string name="delete_course_menu_item">Delete course</string>
+    <string name="show_result_test_name">Test name</string>
+    <string name="show_result_course_name">Course name</string>
+    <string name="show_result_score">Score</string>
 </resources>

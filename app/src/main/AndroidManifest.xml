@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SolveTestActivity"></activity>
+        <activity android:name=".activities.ShowResultsActivity"></activity>
+        <activity android:name=".activities.SolveTestActivity" />
         <activity android:name=".activities.TestsToDoActivity" />
         <activity android:name=".activities.SubscribedCoursesActivity" />
         <activity android:name=".activities.CreateTestActivity" />

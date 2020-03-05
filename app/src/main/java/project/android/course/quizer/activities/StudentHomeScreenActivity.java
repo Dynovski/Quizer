@@ -24,7 +24,7 @@ public class StudentHomeScreenActivity extends AppCompatActivity implements View
         findViewById(R.id.all_courses_card).setOnClickListener(this);
         findViewById(R.id.my_account_card).setOnClickListener(this);
         findViewById(R.id.tests_to_do_card).setOnClickListener(this);
-        //findViewById(R.id.results_card).setOnClickListener(this);
+        findViewById(R.id.results_card).setOnClickListener(this);
     }
 
     @Override
@@ -51,6 +51,7 @@ public class StudentHomeScreenActivity extends AppCompatActivity implements View
                 startActivity(new Intent(this, TestsToDoActivity.class));
                 break;
             case R.id.results_card:
+                startActivity(new Intent(this, ShowResultsActivity.class));
                 break;
         }
     }
