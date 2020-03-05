@@ -54,15 +54,32 @@ public class SolveQuestionFragment extends Fragment
         if(parentActivity.getNumOfQuestions() == questionId + 1)
         {
             saveButton.setOnClickListener(v -> {
-                parentActivity.finish();
+                parentActivity.checkTest();
+                parentActivity.addSummaryFragment();
                 //TODO: zebrac dane i zapisac wynik, test umescic w wykonanych testach
                 //TODO: dialog czy napewno chce skonczyc
             });
-        }
-        else
+        } else
         {
+            saveButton.setOnClickListener(null);
             saveButton.setVisibility(View.INVISIBLE);
         }
+
         return view;
+    }
+
+    public boolean answersCorrect()
+    {
+        boolean firstAnswerCorrect = parentActivity.getAnswers().get(4 * questionId).isCorrect() == answer1.isChecked();
+        boolean secondAnswerCorrect = parentActivity.getAnswers().get(4 * questionId + 1).isCorrect() == answer2.isChecked();
+        boolean thirdAnswerCorrect = parentActivity.getAnswers().get(4 * questionId + 2).isCorrect() == answer3.isChecked();
+        boolean fourthAnswerCorrect = parentActivity.getAnswers().get(4 * questionId + 3).isCorrect() == answer4.isChecked();
+
+        return firstAnswerCorrect && secondAnswerCorrect && thirdAnswerCorrect && fourthAnswerCorrect;
+    }
+
+    public int getQuestionId()
+    {
+        return questionId;
     }
 }

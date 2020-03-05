@@ -69,6 +69,7 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
                 solveTestIntent.putExtra("TESTNAME", current.getTestName());
                 solveTestIntent.putExtra("NUMOFQUESTIONS", current.getNumOfQuestions());
                 solveTestIntent.putExtra("DEADLINE", current.getDueDate());
+                solveTestIntent.putExtra("COURSENAME", current.getCourseName());
                applicationContext.startActivity(solveTestIntent);
             });
         }

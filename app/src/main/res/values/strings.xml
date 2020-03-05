@@ -54,4 +54,6 @@
     <string name="solve_test_number_of_questions">Number of questions in this test</string>
     <string name="solve_test_deadline">Deadline for this test</string>
     <string name="button_finish">Save</string>
+    <string name="test_summary_score_prompt">Your Score:</string>
+    <string name="button_end">FINISH</string>
 </resources>

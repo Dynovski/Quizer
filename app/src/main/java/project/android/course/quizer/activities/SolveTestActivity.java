@@ -8,26 +8,30 @@ import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.adapters.ViewPagerAdapter;
 import project.android.course.quizer.firebaseObjects.Answer;
+import project.android.course.quizer.firebaseObjects.CompletedTest;
 import project.android.course.quizer.firebaseObjects.Question;
-import project.android.course.quizer.firebaseObjects.Test;
-import project.android.course.quizer.fragments.CreateQuestionFragment;
 import project.android.course.quizer.fragments.SolveQuestionFragment;
 import project.android.course.quizer.fragments.TestStartFragment;
+import project.android.course.quizer.fragments.TestSummaryFragment;
 
 public class SolveTestActivity extends AppCompatActivity
 {
     private static final String TAG = "DATABASE_TEST_SOLVING";
     private FirebaseFirestore database;
     private CollectionReference testsRef;
+    private CollectionReference resultsRef;
+    private CollectionReference completedTestsRef;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ArrayList<Question> questions;
@@ -36,6 +40,8 @@ public class SolveTestActivity extends AppCompatActivity
     private String testName;
     private int numOfQuestions;
     private Timestamp deadline;
+    private int testScore = 0;
+    private String courseName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,10 +51,14 @@ public class SolveTestActivity extends AppCompatActivity
 
         database = FirebaseFirestore.getInstance();
         testsRef = database.collection("Tests");
-
+        resultsRef = database.collection("Users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("Results");
+        completedTestsRef = database.collection("Users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("CompletedTests");
         Bundle receivedBundle = getIntent().getExtras();
         assert(receivedBundle != null);
         testName = receivedBundle.getString("TESTNAME");
+        courseName = receivedBundle.getString("COURSENAME");
         numOfQuestions = receivedBundle.getInt("NUMOFQUESTIONS");
         deadline = (Timestamp) receivedBundle.get("DEADLINE");
 
@@ -130,5 +140,30 @@ public class SolveTestActivity extends AppCompatActivity
     public ArrayList<Answer> getAnswers()
     {
         return answers;
+    }
+
+    public int getTestScore()
+    {
+        return testScore;
+    }
+
+    public void checkTest()
+    {
+        for(int i = 1; i < adapter.getCount(); i++)
+        {
+            if(((SolveQuestionFragment)adapter.getItem(i)).answersCorrect())
+                ++testScore;
+        }
+
+        completedTestsRef.document().set(new CompletedTest(testName, courseName, numOfQuestions, testScore, new Timestamp(new Date())))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully added completed test entry"))
+                .addOnFailureListener(e -> Log.d(TAG, "Couldn't add completed test\n" + e.toString()));
+    }
+
+    public void addSummaryFragment()
+    {
+        adapter.addFragment(new TestSummaryFragment(), "Test Summary");
+        adapter.notifyDataSetChanged();
+        moveToNextPage();
     }
 }
