@@ -28,7 +28,7 @@ public class SolveQuestionFragment extends Fragment
 
     public SolveQuestionFragment(int questionId)
     {
-        questionId = questionId;
+        this.questionId = questionId;
     }
 
     @Nullable

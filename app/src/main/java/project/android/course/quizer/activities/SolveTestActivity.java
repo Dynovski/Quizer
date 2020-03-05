@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import project.android.course.quizer.R;
@@ -62,8 +63,8 @@ public class SolveTestActivity extends AppCompatActivity
         numOfQuestions = receivedBundle.getInt("NUMOFQUESTIONS");
         deadline = (Timestamp) receivedBundle.get("DEADLINE");
 
-        questions = new ArrayList<>();
-        answers = new ArrayList<>();
+        questions = new ArrayList<>(Arrays.asList(new Question[numOfQuestions]));
+        answers = new ArrayList<>(Arrays.asList(new Answer[4 * numOfQuestions]));
 
         getQuestionsAndAnswersFromDatabase();
 
@@ -79,28 +80,27 @@ public class SolveTestActivity extends AppCompatActivity
     {
         testsRef.document(testName).collection("Questions").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int i = 1;
+                    int i = 0;
                     for(DocumentSnapshot questionDocument : queryDocumentSnapshots.getDocuments())
                     {
-                        questions.add(questionDocument.toObject(Question.class));
+                        questions.set(i, questionDocument.toObject(Question.class));
+                        int finalI = i;
                         questionDocument.getReference().collection("Answers").get()
                                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                                    int j = 0;
                                     for(DocumentSnapshot answerDocument : queryDocumentSnapshots1.getDocuments())
                                     {
-                                        answers.add(answerDocument.toObject(Answer.class));
+                                        answers.set(4 * finalI + j++, answerDocument.toObject(Answer.class));
                                     }
-                                    Log.d(TAG, "getTestDataFromDatabase: Successfully retrieved answers for question " + i);
+                                    Log.d(TAG, "getTestDataFromDatabase: Successfully retrieved answers for question " + finalI);
                                 })
-                                .addOnFailureListener(e -> {
-                                    Log.d(TAG, "getTestDataFromDatabase: Couldn't retrieve answers for question " + i + "\n"
-                                            + e.toString());
-                                });
+                                .addOnFailureListener(e -> Log.d(TAG, "getTestDataFromDatabase: Couldn't retrieve answers for question " + finalI + "\n"
+                                        + e.toString()));
+                        i++;
                     }
                     Log.d(TAG, "getTestDataFromDatabase: Successfully retrieved all questions and answers");
                 })
-                .addOnFailureListener(e -> {
-                    Log.d(TAG, "getTestDataFromDatabase: Couldn't retrieve questions and answers\n" + e.toString());
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "getTestDataFromDatabase: Couldn't retrieve questions and answers\n" + e.toString()));
     }
 
     public void moveToNextPage()
@@ -112,7 +112,7 @@ public class SolveTestActivity extends AppCompatActivity
     {
         for(int i = 0; i < numOfQuestions;)
         {
-            adapter.addFragment(new SolveQuestionFragment(i++), "Question" + i);
+            adapter.addFragment(new SolveQuestionFragment(i++), "Question " + i);
         }
         adapter.notifyDataSetChanged();
     }
@@ -165,5 +165,10 @@ public class SolveTestActivity extends AppCompatActivity
         adapter.addFragment(new TestSummaryFragment(), "Test Summary");
         adapter.notifyDataSetChanged();
         moveToNextPage();
+    }
+
+    public boolean testStarted()
+    {
+        return adapter.getCount() > 1;
     }
 }

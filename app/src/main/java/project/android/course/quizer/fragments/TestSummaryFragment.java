@@ -32,7 +32,7 @@ public class TestSummaryFragment extends Fragment
         parentActivity = (SolveTestActivity) getActivity();
 
         testNameTextView.setText(parentActivity.getTestName());
-        scoreTextView.setText(parentActivity.getTestScore());
+        scoreTextView.setText(String.format("%d / %d", parentActivity.getTestScore(), parentActivity.getNumOfQuestions()));
 
         endButton.setOnClickListener(v -> parentActivity.finish());
 

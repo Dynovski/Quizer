@@ -39,10 +39,17 @@ public class TestStartFragment extends Fragment
         numOfQuestionsTextView.setText(Integer.toString(parentActivity.getNumOfQuestions()));
         deadlineTextView.setText(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(parentActivity.getDeadline().toDate()));
 
-        beginTestButton.setOnClickListener(v -> {
-            parentActivity.addQuestions();
-            parentActivity.moveToNextPage();
-        });
+        if(parentActivity.testStarted())
+        {
+            beginTestButton.setOnClickListener(null);
+            beginTestButton.setVisibility(View.INVISIBLE);
+        } else
+        {
+            beginTestButton.setOnClickListener(v -> {
+                parentActivity.addQuestions();
+                parentActivity.moveToNextPage();
+            });
+        }
 
         return view;
     }
