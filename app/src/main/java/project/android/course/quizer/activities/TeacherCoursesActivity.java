@@ -11,10 +11,13 @@ import project.android.course.quizer.R;
 import project.android.course.quizer.adapters.CourseAdapter;
 import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 
+// Activity coordinating the display of the list of courses of a given teacher, its recyclerView's cells
+// recyclerView operates on LiveData, so it is updated automatically when changes in database occur
 public class TeacherCoursesActivity extends AppCompatActivity
 {
-    private CourseAdapter adapter;
     private TeacherCoursesViewModel teacherCoursesViewModel;
+
+    private CourseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,8 +27,8 @@ public class TeacherCoursesActivity extends AppCompatActivity
 
         RecyclerView recyclerView = findViewById(R.id.coursesRecycleView);
         recyclerView.setHasFixedSize(true);
-        // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         adapter = new CourseAdapter(this);
         recyclerView.setAdapter(adapter);
 

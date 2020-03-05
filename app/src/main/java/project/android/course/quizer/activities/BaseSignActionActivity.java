@@ -9,37 +9,39 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 
-// Basic activity for sign in or sign up providing basic ux utilities
+// Activity providing basic ux utilities for signing in and signing up
 public class BaseSignActionActivity extends AppCompatActivity
 {
-        public ProgressBar mProgressBar;
+    public ProgressBar mProgressBar;
 
-        public void setProgressBar(int resId) {
-            mProgressBar = findViewById(resId);
-        }
+    public void setProgressBar(int resId)
+    {
+        mProgressBar = findViewById(resId);
+    }
 
-        public void showProgressBar() {
-            if (mProgressBar != null) {
-                mProgressBar.setVisibility(View.VISIBLE);
-            }
-        }
+    public void showProgressBar()
+    {
+        if(mProgressBar != null)
+            mProgressBar.setVisibility(View.VISIBLE);
+    }
 
-        public void hideProgressBar() {
-            if (mProgressBar != null) {
-                mProgressBar.setVisibility(View.INVISIBLE);
-            }
-        }
+    public void hideProgressBar()
+    {
+        if(mProgressBar != null)
+            mProgressBar.setVisibility(View.INVISIBLE);
+    }
 
-        public void hideKeyboard(View view) {
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-        }
+    public void hideKeyboard(View view)
+    {
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null)
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
-        @Override
-        public void onStop() {
-            super.onStop();
-            hideProgressBar();
-        }
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        hideProgressBar();
+    }
 }

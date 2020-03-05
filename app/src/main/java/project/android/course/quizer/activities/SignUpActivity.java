@@ -18,9 +18,12 @@ import project.android.course.quizer.activities.BaseSignActionActivity;
 import project.android.course.quizer.activities.SignInActivity;
 import project.android.course.quizer.firebaseObjects.User;
 
+// Activity coordinating user signing up, it checks the data that user entered and is creating new
+// user account, it creates account with lowest privilege level for security reasons , if user needs
+// higher one it needs to be changed in database by administrator, then in logs user in
 public class SignUpActivity extends BaseSignActionActivity implements View.OnClickListener
 {
-    private static final String TAG = "SignUpLogging";
+    private static final String TAG = "SIGN_UP_DEBUG";
 
     // Layout related variables
     private EditText mEmailField;
@@ -45,8 +48,25 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
 
+        // Adding actions to clickable elements
         findViewById(R.id.button_sign_up).setOnClickListener(this);
         findViewById(R.id.text_view_login_delegation).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch(view.getId())
+        {
+            case R.id.button_sign_up:
+                hideKeyboard(view);
+                createAccount();
+                break;
+            case R.id.text_view_login_delegation:
+                finish();
+                startActivity(new Intent(this, SignInActivity.class));
+                break;
+        }
     }
 
     private void createAccount()
@@ -68,10 +88,10 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
                         Log.d(TAG, "User successfully created");
                         // Adding new user to database with lowest privilege
                         String userId = mAuth.getCurrentUser().getUid();
+                        String userEmail = mAuth.getCurrentUser().getEmail();
                         mDatabase.collection("Users").document(userId).set(new User(2,
-                                "", mAuth.getCurrentUser().getEmail()));
+                                "", userId, userEmail));
                         finish();
-                        // Start new activity for a user
                         startActivity(new Intent(this, StudentHomeScreenActivity.class));
                     } else
                     {
@@ -97,6 +117,7 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
             mEmailField.requestFocus();
             valid = false;
         }
+
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
             mEmailField.setError("Please enter a valid email");
@@ -111,6 +132,7 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
             mPasswordField.requestFocus();
             valid = false;
         }
+
         if(password.length() < 6)
         {
             mPasswordField.setError("Password must be at least 6 characters");
@@ -119,20 +141,5 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
         }
 
         return valid;
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        switch(view.getId())
-        {
-            case R.id.button_sign_up:
-                createAccount();
-                break;
-            case R.id.text_view_login_delegation:
-                finish();
-                startActivity(new Intent(this, SignInActivity.class));
-                break;
-        }
     }
 }

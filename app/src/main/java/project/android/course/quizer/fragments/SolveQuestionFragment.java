@@ -12,12 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-
 import project.android.course.quizer.R;
 import project.android.course.quizer.activities.SolveTestActivity;
-import project.android.course.quizer.firebaseObjects.Answer;
-import project.android.course.quizer.firebaseObjects.Question;
 
 public class SolveQuestionFragment extends Fragment
 {
@@ -47,9 +43,6 @@ public class SolveQuestionFragment extends Fragment
         answer4 = view.findViewById(R.id.radio_button_answer4);
         saveButton = view.findViewById(R.id.button_save);
         parentActivity = (SolveTestActivity) getActivity();
-
-        ArrayList<Question> questions = parentActivity.getQuestions();
-        ArrayList<Answer> answers = parentActivity.getAnswers();
 
         questionTextView.setText(parentActivity.getQuestions().get(questionId).getQuestionText());
         answer1.setText(parentActivity.getAnswers().get(4 * questionId).getAnswerText());

@@ -4,15 +4,17 @@ public class User
 {
     private int privilegeLevel;
     private String name;
+    private String userId;
     private String email;
 
     // Empty constructor needed by Firebase
     public User() {}
 
-    public User(int privilegeLevel, String name, String email)
+    public User(int privilegeLevel, String name, String userId, String email)
     {
         this.privilegeLevel = privilegeLevel;
         this.name = name;
+        this.userId = userId;
         this.email = email;
     }
 
@@ -24,6 +26,11 @@ public class User
     public String getName()
     {
         return name;
+    }
+
+    public String getUserId()
+    {
+        return userId;
     }
 
     public String getEmail()

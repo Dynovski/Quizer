@@ -88,7 +88,7 @@
                 android:singleLine="true" />
 
             <TextView
-                android:id="@+id/text_view_forget_password"
+                android:id="@+id/text_view_forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -107,7 +107,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/text_view_register_delegation"
+                android:id="@+id/text_view_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

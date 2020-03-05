@@ -17,18 +17,20 @@ import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.User;
 import project.android.course.quizer.singletons.CurrentUser;
 
+// Activity coordinating user signing in, it checks the data that user entered and is logging user
+// to the view dependent on user privilege level
 public class SignInActivity extends BaseSignActionActivity implements View.OnClickListener
 {
     private static final String TAG = "SIGN_IN_DEBUG";
     static final int RESET_PASSWORD_REQUEST = 1;
 
     // Layout related variables
-    private EditText mEmailField;
-    private EditText mPasswordField;
+    private EditText emailEditText;
+    private EditText passwordEditText;
 
     // Firebase instance variables
-    private FirebaseFirestore mDatabase;
-    private FirebaseAuth mAuth;
+    private FirebaseFirestore database;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,54 +39,70 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
         setContentView(R.layout.activity_sign_in);
 
         // Connecting layout variables with code
-        mEmailField = findViewById(R.id.edit_text_email);
-        mPasswordField = findViewById(R.id.edit_text_password);
+        emailEditText = findViewById(R.id.edit_text_email);
+        passwordEditText = findViewById(R.id.edit_text_password);
         setProgressBar(R.id.progressbar);
 
         // Get Firebase instances
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
 
+        // Adding actions to clickable elements
         findViewById(R.id.button_sign_in).setOnClickListener(this);
-        findViewById(R.id.text_view_register_delegation).setOnClickListener(this);
-        findViewById(R.id.text_view_forget_password).setOnClickListener(this);
+        findViewById(R.id.text_view_register).setOnClickListener(this);
+        findViewById(R.id.text_view_forgot_password).setOnClickListener(this);
     }
 
-    // User still logged in
     @Override
     protected void onStart()
     {
         super.onStart();
 
-        if(mAuth.getCurrentUser() != null)
+        // User still logged in
+        if(auth.getCurrentUser() != null)
         {
             loginUserToCorrespondingView();
             finish();
         }
     }
+
     @Override
     public void onClick(View view)
     {
         switch(view.getId())
         {
-            case R.id.text_view_register_delegation:
+            case R.id.text_view_register:
                 finish();
                 startActivity(new Intent(this, SignUpActivity.class));
                 break;
             case R.id.button_sign_in:
+                hideKeyboard(view);
                 login();
                 break;
-            case R.id.text_view_forget_password:
+            case R.id.text_view_forgot_password:
                 startActivityForResult(new Intent(this, ResetPasswordActivity.class),
                         RESET_PASSWORD_REQUEST);
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESET_PASSWORD_REQUEST)
+        {
+            if(resultCode == RESULT_OK)
+                Toast.makeText(this, "Email pending...", Toast.LENGTH_SHORT).show();
+            else if(resultCode == RESULT_CANCELED)
+                Toast.makeText(this, "Cancelled password reset", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void login()
     {
-        String email = mEmailField.getText().toString().trim();
-        String password = mPasswordField.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
 
         Log.d(TAG, "login of " + email);
 
@@ -93,7 +111,7 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
 
         showProgressBar();
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful())
                     {
@@ -111,8 +129,8 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
 
     private void loginUserToCorrespondingView()
     {
-        String userId = mAuth.getCurrentUser().getUid();
-        mDatabase.collection("Users").document(userId).get()
+        String userId = auth.getCurrentUser().getUid();
+        database.collection("Users").document(userId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if(documentSnapshot.exists())
                     {
@@ -147,47 +165,36 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
     {
         boolean valid = true;
 
-        String email = mEmailField.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
         if(email.isEmpty())
         {
-            mEmailField.setError("Email is required");
-            mEmailField.requestFocus();
-            valid = false;
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-        {
-            mEmailField.setError("Please enter a valid email");
-            mEmailField.requestFocus();
+            emailEditText.setError("Email is required");
+            emailEditText.requestFocus();
             valid = false;
         }
 
-        String password = mPasswordField.getText().toString().trim();
-        if(password.isEmpty())
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
-            mPasswordField.setError("Password is required");
-            mPasswordField.requestFocus();
+            emailEditText.setError("Please enter a valid email");
+            emailEditText.requestFocus();
             valid = false;
         }
+
+        String password = passwordEditText.getText().toString().trim();
+        if(password.isEmpty())
+        {
+            passwordEditText.setError("Password is required");
+            passwordEditText.requestFocus();
+            valid = false;
+        }
+
         if(password.length() < 6)
         {
-            mPasswordField.setError("Password must be at least 6 characters");
-            mPasswordField.requestFocus();
+            passwordEditText.setError("Password must be at least 6 characters");
+            passwordEditText.requestFocus();
             valid = false;
         }
 
         return valid;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESET_PASSWORD_REQUEST)
-        {
-            if(resultCode == RESULT_OK)
-                Toast.makeText(this, "Email pending...", Toast.LENGTH_SHORT).show();
-            else if(resultCode == RESULT_CANCELED)
-                Toast.makeText(this, "Cancelled password reset", Toast.LENGTH_SHORT).show();
-        }
     }
 }
