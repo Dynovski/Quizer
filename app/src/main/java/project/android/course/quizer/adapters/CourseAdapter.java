@@ -1,10 +1,12 @@
 package project.android.course.quizer.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import project.android.course.quizer.R;
+import project.android.course.quizer.activities.TeacherCoursesActivity;
 import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.fragments.CourseDetailsDialogFragment;
 
@@ -26,6 +29,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     private final LayoutInflater inflater;
     private List<Course> courses;
     private Context context;
+    private Course selectedCourse;
 
     class CourseViewHolder extends RecyclerView.ViewHolder
     {
@@ -42,7 +46,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        courses = new ArrayList<Course>();
+        courses = new ArrayList<>();
     }
 
 
@@ -64,11 +68,28 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             Course current = courses.get(position);
             holder.name.setText(current.getCourseName());
 
-            holder.name.setOnClickListener(v -> {
+            holder.itemView.setOnClickListener( v -> Toast.makeText(context, "ShortClicked", Toast.LENGTH_SHORT).show());
+            holder.itemView.setOnClickListener(v -> {
                 DialogFragment newFragment = new CourseDetailsDialogFragment(current);
                 newFragment.show(((FragmentActivity)context).getSupportFragmentManager(), current.getCourseName() + "DetailDialog");
             });
+
+            if(context instanceof TeacherCoursesActivity)
+            {
+                holder.itemView.setOnLongClickListener(v -> {
+                    selectedCourse = courses.get(position);
+                    ((TeacherCoursesActivity) context).showPopupMenu(v);
+                    return true;
+                });
+            }
         }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull CourseViewHolder holder)
+    {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
     }
 
     public void setCourses(QuerySnapshot snapshot)
@@ -78,6 +99,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         for(DocumentSnapshot document : documents)
             this.courses.add(document.toObject(Course.class));
         notifyDataSetChanged();
+    }
+
+    public Course getSelectedCourse()
+    {
+        return selectedCourse;
     }
 
     // Return the size of your dataset (invoked by the layout manager)

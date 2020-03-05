@@ -56,4 +56,7 @@
     <string name="button_finish">Save</string>
     <string name="test_summary_score_prompt">Your Score:</string>
     <string name="button_end">FINISH</string>
+    <string name="add_test_menu_item">Add test</string>
+    <string name="edit_course_menu_item">Edit course</string>
+    <string name="delete_course_menu_item">Delete course</string>
 </resources>

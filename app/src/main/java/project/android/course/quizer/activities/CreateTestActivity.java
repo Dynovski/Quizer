@@ -53,7 +53,7 @@ public class CreateTestActivity extends AppCompatActivity
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TestTitleFragment("Algebra"), "Choose test name");
+        adapter.addFragment(new TestTitleFragment(getIntent().getExtras().getString("COURSENAME")), "Choose test name");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }
