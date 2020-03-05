@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
-    <RadioButton
+    <project.android.course.quizer.UncheckableRadioButton
         android:id="@+id/radio_button_answer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintTop_toTopOf="@+id/textView17" />
 
-    <RadioButton
+    <project.android.course.quizer.UncheckableRadioButton
         android:id="@+id/radio_button_answer2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView19"
         app:layout_constraintTop_toTopOf="@+id/textView19" />
 
-    <RadioButton
+    <project.android.course.quizer.UncheckableRadioButton
         android:id="@+id/radio_button_answer3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView20"
         app:layout_constraintTop_toTopOf="@+id/textView20" />
 
-    <RadioButton
+    <project.android.course.quizer.UncheckableRadioButton
         android:id="@+id/radio_button_answer4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
