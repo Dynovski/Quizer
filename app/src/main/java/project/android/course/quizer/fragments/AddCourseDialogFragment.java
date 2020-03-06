@@ -43,16 +43,22 @@ public class AddCourseDialogFragment extends DialogFragment
         View view = inflater.inflate(R.layout.fragment_create_course_dialog, null);
         builder.setView(view);
 
-        courseNameEditText = view.findViewById(R.id.edit_text_new_course);
-        courseNameEditText = view.findViewById(R.id.course_description_edit_text);
+        courseNameEditText = view.findViewById(R.id.course_name_edit_text);
+        courseDescriptionEditText = view.findViewById(R.id.course_description_edit_text);
         addButton = view.findViewById(R.id.button_add);
         cancelButton = view.findViewById(R.id.button_cancel);
 
         addButton.setOnClickListener(v -> {
-            String newCourseName = courseNameEditText.getText().toString();
+            String newCourseName = courseNameEditText.getText().toString().trim();
+            String newCourseDescription = courseDescriptionEditText.getText().toString().trim();
             if(!newCourseName.isEmpty())
             {
-                executeBatchedWrite(newCourseName, getContext());
+                coursesRef.document(newCourseName).set(new Course(newCourseName,
+                        CurrentUser.getCurrentUser().getName(),newCourseDescription))
+                        .addOnSuccessListener(aVoid ->
+                                Log.d(TAG, "Successfully added new course"))
+                        .addOnFailureListener(e ->
+                                Log.d(TAG, "Couldn't add new course\n" + e.toString()));
                 getDialog().dismiss();
             }
             else
@@ -65,18 +71,7 @@ public class AddCourseDialogFragment extends DialogFragment
 
         return builder.create();
     }
-
-    private void executeBatchedWrite(String newCourseName, Context context)
-    {
-        WriteBatch batch = mDatabase.batch();
-        DocumentReference newCourse = coursesRef.document(newCourseName);
-        batch.set(newCourse, new Course(newCourseName, CurrentUser.getCurrentUser().getName(), courseNameEditText.getText().toString()));
-        batch.commit()
-                .addOnSuccessListener(documentReference ->
-                        Toast.makeText(context, "Successfully added new course", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> {
-            Toast.makeText(context, "Couldn't add new course", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, e.toString());
-        });
-    }
 }
+//TODO: Naprawić wyświetlanie testów do uzupełnienia
+//TODO: Zrobić edycję kursów dla nauczyciela
+//Todo: Zrobić dodawanie pytań do testu dla nauczyciela, wtedy trzeba wybrać kilka z pytań do odrzucenia przed testem

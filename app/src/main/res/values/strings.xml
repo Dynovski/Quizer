@@ -63,4 +63,6 @@
     <string name="show_result_course_name">Course name</string>
     <string name="show_result_score">Score</string>
     <string name="add_course_description_prompt">Add description for this course</string>
+    <string name="edit_course_name">Edit course name</string>
+    <string name="edit_course_description">Edit course description</string>
 </resources>

@@ -1,6 +1,7 @@
 package project.android.course.quizer.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +15,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.adapters.CourseAdapter;
+import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.singletons.CurrentUser;
 import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 
@@ -27,6 +30,7 @@ import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 public class TeacherCoursesActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener
 {
     private static final String TAG = "TEACHER_COURSES_DEBUG";
+    private static final int EDIT_COURSE_REQUEST_CODE = 1;
     private TeacherCoursesViewModel teacherCoursesViewModel;
 
     private CourseAdapter adapter;
@@ -60,7 +64,12 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
         switch (item.getItemId())
         {
             case R.id.edit_course_item:
-                return super.onContextItemSelected(item);
+                Course selectedCourse = adapter.getSelectedCourse();
+                Intent editCourseIntent = new Intent(this, EditCourseActivity.class);
+                editCourseIntent.putExtra("courseName", selectedCourse.getCourseName());
+                editCourseIntent.putExtra("courseDescription", selectedCourse.getDescription());
+                startActivityForResult(editCourseIntent, EDIT_COURSE_REQUEST_CODE);
+                return true;
             case R.id.delete_course_item:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Do you want to delete this course?");
@@ -84,8 +93,53 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                 Intent testIntent = new Intent(this, CreateTestActivity.class);
                 testIntent.putExtra("COURSENAME", adapter.getSelectedCourse().getCourseName());
                 startActivity(testIntent);
+                return true;
             default:
-                return super.onContextItemSelected(item);
+                return false;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == EDIT_COURSE_REQUEST_CODE)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String oldCourseName = data.getStringExtra("oldCourseName");
+                String newCourseName = data.getStringExtra("newCourseName");
+                if(!oldCourseName.equals(newCourseName))
+                {
+                    FirebaseFirestore.getInstance().collection("Courses")
+                            .document(oldCourseName).delete()
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course content from courses"))
+                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course content from courses\n" + e.toString()));
+                    FirebaseFirestore.getInstance().collection("Users").document(CurrentUser.getCurrentUser().getUserId())
+                            .collection("SubscribedCourses")
+                            .document(oldCourseName).delete()
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course content from subscribed courses"))
+                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course content from subscribed courses\n" + e.toString()));
+                }
+                Course editedCourse = new Course(data.getStringExtra("newCourseName"),
+                        CurrentUser.getCurrentUser().getName(),
+                        data.getStringExtra("courseDescription"));
+                FirebaseFirestore.getInstance().collection("Courses")
+                        .document(newCourseName).set(editedCourse)
+                        .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully updated course content from courses"))
+                        .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course content from courses\n" + e.toString()));
+                FirebaseFirestore.getInstance().collection("Users").document(CurrentUser.getCurrentUser().getUserId())
+                        .collection("SubscribedCourses")
+                        .document(newCourseName).set(editedCourse)
+                        .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully updated course content from subscribed courses"))
+                        .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course content from subscribed courses\n" + e.toString()));
+                Toast.makeText(this, "Successfully edited course", Toast.LENGTH_SHORT).show();
+            } else if(resultCode == RESULT_CANCELED)
+            {
+                Toast.makeText(this, "Cancelled editing course", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(this, "Cannot edit course", Toast.LENGTH_SHORT).show();
         }
     }
 }

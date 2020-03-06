@@ -41,7 +41,7 @@ public class CourseDetailsDialogFragment extends DialogFragment
 
         courseNameTextView.setText(displayedCourse.getCourseName());
         teacherNameTextView.setText(displayedCourse.getTeacher());
-        courseNameTextView.setText(displayedCourse.getDescription());
+        courseDescriptionTextView.setText(displayedCourse.getDescription());
 
         return builder.create();
     }

@@ -4,7 +4,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/text_view_new_course_info"
+        android:id="@+id/course_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -14,7 +14,7 @@
         android:textSize="24sp" />
 
     <EditText
-        android:id="@+id/edit_text_new_course"
+        android:id="@+id/course_name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="4dp"
@@ -30,7 +30,7 @@
         android:autofillHints="" />
 
     <TextView
-        android:id="@+id/textView23"
+        android:id="@+id/course_description_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -44,7 +44,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:maxLines="16"
+        android:maxLines="12"
         android:textSize="24sp" />
 
     <LinearLayout
