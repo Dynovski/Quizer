@@ -28,7 +28,6 @@ public class UserAccountActivity extends AppCompatActivity
     private TextView nameTextView;
     private TextView emailTextView;
     private TextView userTypeTextView;
-    private Button editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

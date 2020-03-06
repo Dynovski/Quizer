@@ -62,4 +62,5 @@
     <string name="show_result_test_name">Test name</string>
     <string name="show_result_course_name">Course name</string>
     <string name="show_result_score">Score</string>
+    <string name="add_course_description_prompt">Add description for this course</string>
 </resources>

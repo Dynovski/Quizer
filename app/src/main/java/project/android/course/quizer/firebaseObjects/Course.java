@@ -4,14 +4,16 @@ public class Course
 {
     private String courseName;
     private String teacher;
+    private String description;
 
     // Empty constructor needed by Firebase
     public Course() {}
 
-    public Course(String courseName, String teacher)
+    public Course(String courseName, String teacher, String description)
     {
         this.courseName = courseName;
         this.teacher = teacher;
+        this.description = description;
     }
 
     public String getCourseName()
@@ -22,5 +24,10 @@ public class Course
     public String getTeacher()
     {
         return teacher;
+    }
+
+    public String getDescription()
+    {
+        return description;
     }
 }

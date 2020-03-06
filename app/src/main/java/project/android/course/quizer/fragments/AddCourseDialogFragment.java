@@ -30,6 +30,7 @@ public class AddCourseDialogFragment extends DialogFragment
     private FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
     private final CollectionReference coursesRef = mDatabase.collection("Courses");
     private EditText courseNameEditText;
+    private EditText courseDescriptionEditText;
     private Button addButton;
     private Button cancelButton;
 
@@ -43,6 +44,7 @@ public class AddCourseDialogFragment extends DialogFragment
         builder.setView(view);
 
         courseNameEditText = view.findViewById(R.id.edit_text_new_course);
+        courseNameEditText = view.findViewById(R.id.course_description_edit_text);
         addButton = view.findViewById(R.id.button_add);
         cancelButton = view.findViewById(R.id.button_cancel);
 
@@ -52,6 +54,11 @@ public class AddCourseDialogFragment extends DialogFragment
             {
                 executeBatchedWrite(newCourseName, getContext());
                 getDialog().dismiss();
+            }
+            else
+            {
+                courseNameEditText.setError("Course must have a name");
+                courseNameEditText.requestFocus();
             }
         });
         cancelButton.setOnClickListener(v -> getDialog().dismiss());
@@ -63,7 +70,7 @@ public class AddCourseDialogFragment extends DialogFragment
     {
         WriteBatch batch = mDatabase.batch();
         DocumentReference newCourse = coursesRef.document(newCourseName);
-        batch.set(newCourse, new Course(newCourseName, CurrentUser.getCurrentUser().getName()));
+        batch.set(newCourse, new Course(newCourseName, CurrentUser.getCurrentUser().getName(), courseNameEditText.getText().toString()));
         batch.commit()
                 .addOnSuccessListener(documentReference ->
                         Toast.makeText(context, "Successfully added new course", Toast.LENGTH_SHORT).show())

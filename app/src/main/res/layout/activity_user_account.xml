@@ -72,13 +72,4 @@
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-    <Button
-        android:id="@+id/account_save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/button_edit"
-        app:layout_constraintEnd_toEndOf="@+id/account_user_type_text_view"
-        app:layout_constraintStart_toStartOf="@+id/account_user_type_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/account_user_type_text_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>
