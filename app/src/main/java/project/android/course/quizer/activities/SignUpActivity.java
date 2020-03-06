@@ -17,6 +17,7 @@ import project.android.course.quizer.R;
 import project.android.course.quizer.activities.BaseSignActionActivity;
 import project.android.course.quizer.activities.SignInActivity;
 import project.android.course.quizer.firebaseObjects.User;
+import project.android.course.quizer.singletons.CurrentUser;
 
 // Activity coordinating user signing up, it checks the data that user entered and is creating new
 // user account, it creates account with lowest privilege level for security reasons , if user needs
@@ -89,10 +90,12 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
                         // Adding new user to database with lowest privilege
                         String userId = mAuth.getCurrentUser().getUid();
                         String userEmail = mAuth.getCurrentUser().getEmail();
-                        mDatabase.collection("Users").document(userId).set(new User(2,
-                                "", userId, userEmail));
+                        User newUser = new User(2, "", userId, userEmail);
+                        CurrentUser.logInUser(newUser);
+                        mDatabase.collection("Users").document(userId).set(newUser);
                         finish();
                         startActivity(new Intent(this, StudentHomeScreenActivity.class));
+                        startActivity(new Intent(this, UpdateAccountActivity.class));
                     } else
                     {
                         Log.w(TAG, "User creation failed", task.getException());

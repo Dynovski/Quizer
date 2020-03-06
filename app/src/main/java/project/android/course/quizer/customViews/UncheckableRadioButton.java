@@ -1,4 +1,4 @@
-package project.android.course.quizer;
+package project.android.course.quizer.customViews;
 
 import android.content.Context;
 import android.util.AttributeSet;

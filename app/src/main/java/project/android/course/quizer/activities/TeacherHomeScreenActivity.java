@@ -1,14 +1,10 @@
 package project.android.course.quizer.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelStoreOwner;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +29,6 @@ public class TeacherHomeScreenActivity extends AppCompatActivity implements View
         findViewById(R.id.my_account_card).setOnClickListener(this);
         findViewById(R.id.create_course_card).setOnClickListener(this);
         findViewById(R.id.teacher_courses_card).setOnClickListener(this);
-        //findViewById(R.id.create_test_card).setOnClickListener(this);
     }
 
     @Override
@@ -56,9 +51,6 @@ public class TeacherHomeScreenActivity extends AppCompatActivity implements View
             case R.id.create_course_card:
                 DialogFragment newFragment = new AddCourseDialogFragment();
                 newFragment.show(getSupportFragmentManager(), "ADD_COURSE_FRAGMENT_DIALOG");
-                break;
-            case R.id.create_test_card:
-                startActivity(new Intent(this, CreateTestActivity.class));
                 break;
         }
     }

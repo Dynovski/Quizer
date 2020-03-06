@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.adapters.CourseAdapter;
+import project.android.course.quizer.singletons.CurrentUser;
 import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 
 // Activity coordinating the display of the list of courses of a given teacher, its recyclerView's cells
@@ -67,8 +68,13 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                     dialog.dismiss();
                     FirebaseFirestore.getInstance().collection("Courses")
                             .document(adapter.getSelectedCourse().getCourseName()).delete()
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course"))
-                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course\n" + e.toString()));
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course from courses"))
+                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course from courses\n" + e.toString()));
+                    FirebaseFirestore.getInstance().collection("Users").document(CurrentUser.getCurrentUser().getUserId())
+                            .collection("SubscribedCourses")
+                            .document(adapter.getSelectedCourse().getCourseName()).delete()
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course from subscribed courses"))
+                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course from subscribed courses\n" + e.toString()));
                 });
                 builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
                 AlertDialog alert = builder.create();
