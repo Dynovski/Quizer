@@ -94,9 +94,12 @@ public class CreateQuestionFragment extends Fragment
                 parentActivity.saveTest();
             } else
             {
-                parentActivity.addQuestionFragment();
-                parentActivity.moveToNextPage();
-                nextButton.setText(R.string.button_edit);
+                if(!(parentActivity.getQuestions().size() - 1 > questionId))
+                {
+                    parentActivity.addQuestionFragment();
+                    parentActivity.moveToNextPage();
+                    nextButton.setText(R.string.button_edit);
+                }
             }
         });
         return view;

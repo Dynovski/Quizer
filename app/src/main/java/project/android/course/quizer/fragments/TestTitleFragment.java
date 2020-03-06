@@ -84,9 +84,12 @@ public class TestTitleFragment extends Fragment
             parentActivity.setTest(new Test(testNameEditText.getText().toString().trim(), courseName,
                     new Timestamp(finalDueDate), Integer.parseInt(numOfQuestions)));
 
-            parentActivity.addQuestionFragment();
-            parentActivity.moveToNextPage();
-            nextButton.setText(R.string.button_edit);
+            if(parentActivity.getQuestions().isEmpty())
+            {
+                parentActivity.addQuestionFragment();
+                parentActivity.moveToNextPage();
+                nextButton.setText(R.string.button_edit);
+            }
         });
 
         return view;

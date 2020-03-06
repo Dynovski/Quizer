@@ -33,6 +33,7 @@ public class AddCourseDialogFragment extends DialogFragment
     private EditText courseDescriptionEditText;
     private Button addButton;
     private Button cancelButton;
+    private Context applicationContext;
 
     @NonNull
     @Override
@@ -47,6 +48,7 @@ public class AddCourseDialogFragment extends DialogFragment
         courseDescriptionEditText = view.findViewById(R.id.course_description_edit_text);
         addButton = view.findViewById(R.id.button_add);
         cancelButton = view.findViewById(R.id.button_cancel);
+        applicationContext = getActivity().getApplicationContext();
 
         addButton.setOnClickListener(v -> {
             String newCourseName = courseNameEditText.getText().toString().trim();
@@ -56,9 +58,11 @@ public class AddCourseDialogFragment extends DialogFragment
                 coursesRef.document(newCourseName).set(new Course(newCourseName,
                         CurrentUser.getCurrentUser().getName(),newCourseDescription))
                         .addOnSuccessListener(aVoid ->
-                                Log.d(TAG, "Successfully added new course"))
-                        .addOnFailureListener(e ->
-                                Log.d(TAG, "Couldn't add new course\n" + e.toString()));
+                                Toast.makeText(applicationContext, "Successfully added new course", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> {
+                                Toast.makeText(applicationContext, "Couldn't add new course", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Couldn't add new course\n" + e.toString());
+                        });
                 getDialog().dismiss();
             }
             else
@@ -73,5 +77,4 @@ public class AddCourseDialogFragment extends DialogFragment
     }
 }
 //TODO: Naprawić wyświetlanie testów do uzupełnienia
-//TODO: Zrobić edycję kursów dla nauczyciela
 //Todo: Zrobić dodawanie pytań do testu dla nauczyciela, wtedy trzeba wybrać kilka z pytań do odrzucenia przed testem
