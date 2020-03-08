@@ -13,17 +13,15 @@ import project.android.course.quizer.R;
 import project.android.course.quizer.fragments.AddCourseDialogFragment;
 import project.android.course.quizer.singletons.CurrentUser;
 
+// Activity coordinating actions available in teacher's home screen, upon choosing one of the
+// options it delegates user to new activities
 public class TeacherHomeScreenActivity extends AppCompatActivity implements View.OnClickListener
 {
-    private Bundle userInfo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_home_screen);
-
-        userInfo = getIntent().getExtras();
 
         findViewById(R.id.sign_out_card).setOnClickListener(this);
         findViewById(R.id.my_account_card).setOnClickListener(this);
@@ -54,6 +52,4 @@ public class TeacherHomeScreenActivity extends AppCompatActivity implements View
                 break;
         }
     }
-
-
 }

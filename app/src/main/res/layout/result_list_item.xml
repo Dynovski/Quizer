@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/result_course_name_tv"
+            android:id="@+id/result_course_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -49,7 +49,7 @@
             android:textSize="22sp" />
 
         <TextView
-            android:id="@+id/result_test_name_tv"
+            android:id="@+id/result_test_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -74,7 +74,7 @@
             android:textSize="22sp" />
 
         <TextView
-            android:id="@+id/result_score_tv"
+            android:id="@+id/result_score_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

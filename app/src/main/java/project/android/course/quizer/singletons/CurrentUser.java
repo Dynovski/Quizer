@@ -1,12 +1,8 @@
 package project.android.course.quizer.singletons;
 
-import android.util.Log;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import project.android.course.quizer.firebaseObjects.User;
 
+// Singleton containing information about currently logged in user
 public class CurrentUser
 {
     private static User INSTANCE;

@@ -4,9 +4,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 
+// Repository containing liveData to completed tests
 public class CompletedTestsRepository
 {
     private static final CollectionReference COMPLETED_TESTS_REFERENCE =

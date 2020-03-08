@@ -15,33 +15,33 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.singletons.CurrentUser;
 
-// Course adapter creates views for course list items and replaces the content of some of the views
-// with new data items when the original item is no longer visible
+// Adapter for displaying list of all courses with possibility to subscribe to them, it contains
+// the list of subscribed courses and displays them, when subscribing to the courses, course that
+// user subscribed to is saved in database in SubscribedCourses collection, when unsubscribing it is deleted
 public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourseAdapter.SubscribeCourseViewHolder>
 {
     private final LayoutInflater inflater;
     private List<Course> allCourses;
     private List<String> subscribedCourses;
     private Context applicationContext;
+    private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     class SubscribeCourseViewHolder extends RecyclerView.ViewHolder
     {
-        private final TextView name;
-        private final TextView enrolledInfo;
+        private final TextView nameTextView;
+        private final TextView enrolledInfoTextView;
 
         public SubscribeCourseViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            name = itemView.findViewById(R.id.text_view_course_name);
-            enrolledInfo = itemView.findViewById(R.id.text_view_enrolled);
+            nameTextView = itemView.findViewById(R.id.course_name_text_view);
+            enrolledInfoTextView = itemView.findViewById(R.id.enrolled_text_view);
         }
 
     }
@@ -54,52 +54,51 @@ public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourse
         subscribedCourses = new ArrayList<>();
     }
 
-
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
     public SubscribeCourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View itemView = inflater.inflate(R.layout.course_item_student, parent, false);
+        View itemView = inflater.inflate(R.layout.subscribeable_course_item, parent, false);
         return new SubscribeCourseViewHolder(itemView);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull SubscribeCourseViewHolder holder, int position)
     {
         if(allCourses != null)
         {
             Course current = allCourses.get(position);
-            holder.name.setText(current.getCourseName());
+            holder.nameTextView.setText(current.getCourseName());
+
             if(subscribedCourses.contains(current.getCourseName()))
-                holder.enrolledInfo.setText(R.string.course_unsubscribe);
+                holder.enrolledInfoTextView.setText(R.string.unsubscribe);
             else
-                holder.enrolledInfo.setText(R.string.course_subscribe);
-            holder.enrolledInfo.setOnClickListener(v -> {
-                if(holder.enrolledInfo.getText().toString().equals(applicationContext.getResources().getString(R.string.course_subscribe)))
+                holder.enrolledInfoTextView.setText(R.string.subscribe);
+
+            holder.enrolledInfoTextView.setOnClickListener(v -> {
+                if(holder.enrolledInfoTextView.getText().toString().equals(applicationContext.getResources().getString(R.string.subscribe)))
                 {
-                    holder.enrolledInfo.setText(R.string.course_unsubscribe);
+                    holder.enrolledInfoTextView.setText(R.string.unsubscribe);
 
-                    FirebaseFirestore.getInstance().collection("Users")
+                    database.collection("Users")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .collection("SubscribedCourses").document(current.getCourseName()).set(current);
+                            .collection("SubscribedCourses")
+                            .document(current.getCourseName()).set(current);
 
-                    FirebaseFirestore.getInstance().collection("Courses")
-                            .document(current.getCourseName()).collection("EnrolledStudents")
+                    database.collection("Courses").document(current.getCourseName())
+                            .collection("EnrolledStudents")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                             .set(CurrentUser.getCurrentUser());
-                }
-                else
+                } else
                 {
-                    holder.enrolledInfo.setText(R.string.course_subscribe);
-                    FirebaseFirestore.getInstance().collection("Users")
+                    holder.enrolledInfoTextView.setText(R.string.subscribe);
+                    database.collection("Users")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .collection("SubscribedCourses").document(current.getCourseName())
-                            .delete();
+                            .collection("SubscribedCourses")
+                            .document(current.getCourseName()).delete();
 
-                    FirebaseFirestore.getInstance().collection("Courses")
-                            .document(current.getCourseName()).collection("EnrolledStudents")
+                    database.collection("Courses").document(current.getCourseName())
+                            .collection("EnrolledStudents")
                             .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                             .delete();
                 }
@@ -110,7 +109,7 @@ public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourse
     @Override
     public void onViewRecycled(@NonNull SubscribeCourseViewHolder holder)
     {
-        holder.enrolledInfo.setOnClickListener(null);
+        holder.enrolledInfoTextView.setOnClickListener(null);
         super.onViewRecycled(holder);
     }
 
@@ -132,7 +131,6 @@ public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourse
         notifyDataSetChanged();
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount()
     {

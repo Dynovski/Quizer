@@ -29,37 +29,45 @@ import project.android.course.quizer.firebaseObjects.User;
 import project.android.course.quizer.singletons.CurrentUser;
 import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 
-// Activity coordinating the display of the list of courses of a given teacher, its recyclerView's cells
+// Activity coordinating the display of the list of courses of a given teacher,
 // recyclerView operates on LiveData, so it is updated automatically when changes in database occur
 public class TeacherCoursesActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener
 {
     private static final String TAG = "TEACHER_COURSES_DEBUG";
-    private static final int EDIT_COURSE_REQUEST_CODE = 1;
-    private TeacherCoursesViewModel teacherCoursesViewModel;
 
+    // Request codes
+    private static final int EDIT_COURSE_REQUEST_CODE = 1;
+
+    // Firebase variables
+    private FirebaseFirestore database;
+
+    private TeacherCoursesViewModel teacherCoursesViewModel;
     private CourseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_of_courses_acitvity);
+        setContentView(R.layout.activity_recycler_view);
 
-        RecyclerView recyclerView = findViewById(R.id.coursesRecycleView);
+        database = FirebaseFirestore.getInstance();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         adapter = new CourseAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         teacherCoursesViewModel = new ViewModelProvider(this).get(TeacherCoursesViewModel.class);
-        teacherCoursesViewModel.getCourses().observe(this, queryDocumentSnapshots -> adapter.setCourses(queryDocumentSnapshots));
+        teacherCoursesViewModel.getCourses().observe(this, queryDocumentSnapshots ->
+                adapter.setCourses(queryDocumentSnapshots));
     }
 
     public void showPopupMenu(View v)
     {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.contextual_menu_teacher);
+        popup.inflate(R.menu.popup_menu_teacher);
         popup.show();
     }
 
@@ -80,23 +88,27 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                 builder.setMessage("Do you want to delete this course?");
                 builder.setPositiveButton("Yes", (dialog, id) -> {
                     dialog.dismiss();
-                    FirebaseFirestore.getInstance().collection("Courses")
-                            .document(adapter.getSelectedCourse().getCourseName()).collection("EnrolledStudents").get()
+                    database.collection("Courses").document(adapter.getSelectedCourse()
+                            .getCourseName()).collection("EnrolledStudents").get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<DocumentSnapshot> enrolledStudents = queryDocumentSnapshots.getDocuments();
                                 for(DocumentSnapshot student : enrolledStudents)
                                 {
                                     String uid = student.toObject(User.class).getUserId();
-                                    FirebaseFirestore.getInstance().collection("Users").document(uid)
+                                    database.collection("Users").document(uid)
                                             .collection("SubscribedCourses")
                                             .document(adapter.getSelectedCourse().getCourseName()).delete()
-                                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course from subscribed courses"))
-                                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course from subscribed courses\n" + e.toString()));
+                                            .addOnSuccessListener(aVoid ->
+                                                    Log.d(TAG, "Successfully deleted course from subscribed courses"))
+                                            .addOnFailureListener(e ->
+                                                    Log.d(TAG, "Couldn't delete course from subscribed courses\n" + e.toString()));
                                 }
-                                FirebaseFirestore.getInstance().collection("Courses")
+                                database.collection("Courses")
                                         .document(adapter.getSelectedCourse().getCourseName()).delete()
-                                        .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course from courses"))
-                                        .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course from courses\n" + e.toString()));
+                                        .addOnSuccessListener(aVoid ->
+                                                Log.d(TAG, "Successfully deleted course from courses"))
+                                        .addOnFailureListener(e ->
+                                                Log.d(TAG, "Couldn't delete course from courses\n" + e.toString()));
                             });
                 });
                 builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
@@ -105,7 +117,7 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                 return true;
             case R.id.add_test_item:
                 Intent testIntent = new Intent(this, CreateTestActivity.class);
-                testIntent.putExtra("COURSENAME", adapter.getSelectedCourse().getCourseName());
+                testIntent.putExtra("courseName", adapter.getSelectedCourse().getCourseName());
                 startActivity(testIntent);
                 return true;
             default:
@@ -130,8 +142,8 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                 if(namesAreDifferent(oldCourseName, newCourseName))
                 {
                     // Getting all users enrolled for the course
-                    FirebaseFirestore.getInstance().collection("Courses")
-                            .document(oldCourseName).collection("EnrolledStudents").get()
+                    database.collection("Courses").document(oldCourseName)
+                            .collection("EnrolledStudents").get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<DocumentSnapshot> enrolledStudents = queryDocumentSnapshots.getDocuments();
                                 List<User> studentsEnrolledToCourse = new ArrayList<>();
@@ -154,19 +166,19 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                                 setCourse(newCourseName, editedCourse, studentsEnrolledToCourse);
                                 updateCourseNameInTests(oldCourseName, newCourseName);
 
-                                Log.d(TAG, "Retrieved all users from course");
+                                Log.d(TAG, "Updated course information for name changed");
                             })
-                            .addOnFailureListener(e -> Log.d(TAG, "Couldn't retrieve all users from course\n" + e.toString()));
-                }
-                else
+                            .addOnFailureListener(e ->
+                                    Log.d(TAG, "Couldn't retrieve all users from course\n" + e.toString()));
+                } else
                 {
                     Course editedCourse = new Course(newCourseName,
                             CurrentUser.getCurrentUser().getName(), courseDescription);
 
                     setCourse(newCourseName, editedCourse, null);
 
-                    FirebaseFirestore.getInstance().collection("Courses")
-                            .document(oldCourseName).collection("EnrolledStudents").get()
+                    database.collection("Courses").document(oldCourseName)
+                            .collection("EnrolledStudents").get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<DocumentSnapshot> enrolledStudents = queryDocumentSnapshots.getDocuments();
 
@@ -175,18 +187,20 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                                     User user = enrolledStudent.toObject(User.class);
                                     setSubscribedCourse(user.getUserId(), newCourseName, editedCourse);
                                 }
+                                Log.d(TAG, "Updated course information for name unchanged");
                             })
                             .addOnFailureListener(e -> Log.d(TAG, "Couldn't retrieve all users from course\n" + e.toString()));
 
                 }
-                Toast.makeText(this, "Successfully edited course", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.edit_course_success, Toast.LENGTH_SHORT).show();
             } else if(resultCode == RESULT_CANCELED)
             {
-                Toast.makeText(this, "Cancelled editing course", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.edit_course_cancel, Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(this, "Cannot edit course", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.edit_course_failed, Toast.LENGTH_SHORT).show();
         }
     }
+
     private boolean namesAreDifferent(String name1, String name2)
     {
         return !name1.equals(name2);
@@ -194,71 +208,80 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
 
     private void deleteCourseFromSubscribedCourses(String userId, String courseName)
     {
-        FirebaseFirestore.getInstance().collection("Users").document(userId)
+        database.collection("Users").document(userId)
                 .collection("SubscribedCourses")
                 .document(courseName).delete()
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course content from subscribed courses"))
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course content from subscribed courses\n" + e.toString()));
+                .addOnSuccessListener(aVoid ->
+                        Log.d(TAG, "Successfully deleted course content from subscribed courses"))
+                .addOnFailureListener(e ->
+                        Log.d(TAG, "Couldn't delete course content from subscribed courses\n" + e.toString()));
     }
 
     private void updateCourseNameInCompletedTests(String userId, String oldCourseName, String newCourseName)
     {
-        FirebaseFirestore.getInstance().collection("Users").document(userId)
-                .collection("CompletedTests").whereEqualTo("courseName", oldCourseName).get()
+        database.collection("Users").document(userId).collection("CompletedTests")
+                .whereEqualTo("courseName", oldCourseName).get()
                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
                     List<DocumentSnapshot> completedTests = queryDocumentSnapshots1.getDocuments();
                     for(DocumentSnapshot completedTest : completedTests)
                         completedTest.getReference().update("courseName", newCourseName)
-                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully updated course in completed tests"))
-                                .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course in completed tests\n" + e.toString()));
+                                .addOnSuccessListener(aVoid ->
+                                        Log.d(TAG, "Successfully updated course in completed tests"))
+                                .addOnFailureListener(e ->
+                                        Log.d(TAG, "Couldn't update course in completed tests\n" + e.toString()));
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course in completed tests\n" + e.toString()));
+                .addOnFailureListener(e -> Log.d(TAG, "Couldn't get courses from completed tests\n" + e.toString()));
     }
 
     private void deleteCourse(String courseName)
     {
-        FirebaseFirestore.getInstance().collection("Courses")
-                .document(courseName).delete()
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully deleted course content from courses"))
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't delete course content from courses\n" + e.toString()));
+        database.collection("Courses").document(courseName).delete()
+                .addOnSuccessListener(aVoid ->
+                        Log.d(TAG, "Successfully deleted course from courses"))
+                .addOnFailureListener(e ->
+                        Log.d(TAG, "Couldn't delete course from courses\n" + e.toString()));
     }
 
     private void updateCourseNameInTests(String oldCourseName, String newCourseName)
     {
-        FirebaseFirestore.getInstance().collection("Tests").whereEqualTo("courseName", oldCourseName).get()
+        database.collection("Tests").whereEqualTo("courseName", oldCourseName).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<DocumentSnapshot> tests = queryDocumentSnapshots.getDocuments();
                     for(DocumentSnapshot test : tests)
                         test.getReference().update("courseName", newCourseName)
-                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully updated course in tests"))
-                                .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course in tests\n" + e.toString()));
+                                .addOnSuccessListener(aVoid ->
+                                        Log.d(TAG, "Successfully updated courseName in tests"))
+                                .addOnFailureListener(e ->
+                                        Log.d(TAG, "Couldn't update courseName in tests\n" + e.toString()));
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course in completed tests\n" + e.toString()));
+                .addOnFailureListener(e -> Log.d(TAG, "Couldn't get tests with given courseName\n" + e.toString()));
     }
 
     private void setCourse(String courseName, Course course, List<User> enrolledStudents)
     {
-        FirebaseFirestore.getInstance().collection("Courses")
-                .document(courseName).set(course)
+        database.collection("Courses").document(courseName).set(course)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Successfully updated course content from courses");
-                    // If name changed therefore document rewrite enrolled students
+                    // If name changed (therefore document) rewrite enrolled students
                     if(enrolledStudents != null)
                     {
                         for(User student : enrolledStudents)
                             FirebaseFirestore.getInstance().collection("Courses")
-                                    .document(courseName).collection("EnrolledStudents").document().set(student);
+                                    .document(courseName).collection("EnrolledStudents")
+                                    .document().set(student);
                     }
+                    Log.d(TAG, "Recreated course with new data");
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course content from courses\n" + e.toString()));
+                .addOnFailureListener(e -> Log.d(TAG, "Couldn't set course in courses\n" + e.toString()));
     }
 
     private void setSubscribedCourse(String userId, String courseName, Course course)
     {
-        FirebaseFirestore.getInstance().collection("Users").document(userId)
+        database.collection("Users").document(userId)
                 .collection("SubscribedCourses")
                 .document(courseName).set(course)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully updated course content from subscribed courses"))
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't update course content from subscribed courses\n" + e.toString()));
+                .addOnSuccessListener(aVoid ->
+                        Log.d(TAG, "Successfully set course in subscribed courses"))
+                .addOnFailureListener(e ->
+                        Log.d(TAG, "Couldn't set course in subscribed courses\n" + e.toString()));
     }
 }

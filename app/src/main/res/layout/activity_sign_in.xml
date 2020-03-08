@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
-        android:text="@string/sign_in_label"
+        android:text="@string/login_prompt"
         android:textColor="#fff"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -52,18 +52,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:labelFor="@id/edit_text_email"
-                android:text="@string/sign_email" />
+                android:labelFor="@id/email_edit_text"
+                android:text="@string/email" />
 
             <EditText
-                android:id="@+id/edit_text_email"
+                android:id="@+id/email_edit_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/ic_email_grey_24dp"
                 android:drawableLeft="@drawable/ic_email_grey_24dp"
                 android:drawablePadding="10dp"
-                android:hint="@string/sign_example_email"
+                android:hint="@string/example_email"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:singleLine="true" />
@@ -72,31 +72,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:labelFor="@id/edit_text_password"
-                android:text="@string/sign_password" />
+                android:labelFor="@id/password_edit_text"
+                android:text="@string/password" />
 
             <EditText
-                android:id="@+id/edit_text_password"
+                android:id="@+id/password_edit_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_lock_grey_24dp"
                 android:drawableLeft="@drawable/ic_lock_grey_24dp"
                 android:drawablePadding="10dp"
-                android:hint="@string/sign_password"
+                android:hint="@string/password"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:singleLine="true" />
 
             <TextView
-                android:id="@+id/text_view_forgot_password"
+                android:id="@+id/forgot_password_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:paddingTop="5dp"
-                android:text="@string/sign_in_forgot_password" />
+                android:text="@string/forgot_password" />
 
             <Button
-                android:id="@+id/button_sign_in"
+                android:id="@+id/sign_in_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="22dp"
@@ -107,27 +107,16 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/text_view_register"
+                android:id="@+id/register_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/sign_in_sign_up_delegation"
+                android:text="@string/register_here"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
         </LinearLayout>
 
     </RelativeLayout>
-
-    <ImageButton
-        android:id="@+id/user_profile_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/sign_in_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
-        app:layout_constraintStart_toStartOf="@+id/relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_label" />
 
     <!--    android:background="@drawable/user_profile_image_background"-->
     <!--    android:src="@drawable/ic_boy"-->

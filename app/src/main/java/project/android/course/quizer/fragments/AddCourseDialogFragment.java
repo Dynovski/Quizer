@@ -16,23 +16,26 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
 
 import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.singletons.CurrentUser;
 
+// Custom class for dialog fragment used to create new course, user must fill the title and
+// can fill the description for the course, course is saved in the database
 public class AddCourseDialogFragment extends DialogFragment
 {
     private static final String TAG = "ADD_COURSE_DIALOG_DEBUG";
-    private FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
-    private final CollectionReference coursesRef = mDatabase.collection("Courses");
+
+    private FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private final CollectionReference coursesRef = database.collection("Courses");
+
     private EditText courseNameEditText;
     private EditText courseDescriptionEditText;
     private Button addButton;
     private Button cancelButton;
+
     private Context applicationContext;
 
     @NonNull
@@ -46,8 +49,8 @@ public class AddCourseDialogFragment extends DialogFragment
 
         courseNameEditText = view.findViewById(R.id.course_name_edit_text);
         courseDescriptionEditText = view.findViewById(R.id.course_description_edit_text);
-        addButton = view.findViewById(R.id.button_add);
-        cancelButton = view.findViewById(R.id.button_cancel);
+        addButton = view.findViewById(R.id.add_button);
+        cancelButton = view.findViewById(R.id.cancel_button);
         applicationContext = getActivity().getApplicationContext();
 
         addButton.setOnClickListener(v -> {
@@ -56,16 +59,15 @@ public class AddCourseDialogFragment extends DialogFragment
             if(!newCourseName.isEmpty())
             {
                 coursesRef.document(newCourseName).set(new Course(newCourseName,
-                        CurrentUser.getCurrentUser().getName(),newCourseDescription))
+                        CurrentUser.getCurrentUser().getName(), newCourseDescription))
                         .addOnSuccessListener(aVoid ->
-                                Toast.makeText(applicationContext, "Successfully added new course", Toast.LENGTH_SHORT).show())
+                                Toast.makeText(applicationContext, R.string.create_course_success, Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> {
-                                Toast.makeText(applicationContext, "Couldn't add new course", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Couldn't add new course\n" + e.toString());
+                            Toast.makeText(applicationContext, R.string.create_course_failed, Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Couldn't add new course\n" + e.toString());
                         });
                 getDialog().dismiss();
-            }
-            else
+            } else
             {
                 courseNameEditText.setError("Course must have a name");
                 courseNameEditText.requestFocus();
@@ -76,4 +78,3 @@ public class AddCourseDialogFragment extends DialogFragment
         return builder.create();
     }
 }
-//Todo: Zrobić dodawanie pytań do testu dla nauczyciela, wtedy trzeba wybrać kilka z pytań do odrzucenia przed testem

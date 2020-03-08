@@ -14,19 +14,19 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/course_name"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_course_name"
+        android:id="@+id/course_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="Name of the course"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/textView11"
         app:layout_constraintStart_toStartOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -38,19 +38,19 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/teacher_name"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="@+id/text_view_course_name"
-        app:layout_constraintStart_toStartOf="@+id/text_view_course_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_course_name" />
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/course_name_text_view"
+        app:layout_constraintStart_toStartOf="@+id/course_name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/course_name_text_view" />
 
     <TextView
-        android:id="@+id/text_view_teacher_name"
+        android:id="@+id/teacher_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="Name of the teacher"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/textView13"
         app:layout_constraintStart_toStartOf="@+id/textView13"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
@@ -61,19 +61,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/course_description"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="@+id/text_view_teacher_name"
-        app:layout_constraintStart_toStartOf="@+id/text_view_teacher_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_teacher_name" />
+        android:text="@string/description"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/teacher_name_text_view"
+        app:layout_constraintStart_toStartOf="@+id/teacher_name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/teacher_name_text_view" />
 
     <TextView
-        android:id="@+id/text_view_course_description"
+        android:id="@+id/course_description_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:textSize="24sp"
+        android:maxLines="6"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/textView12"
         app:layout_constraintStart_toStartOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />

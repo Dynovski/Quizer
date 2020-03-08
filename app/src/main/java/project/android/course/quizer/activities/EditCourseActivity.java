@@ -1,21 +1,22 @@
 package project.android.course.quizer.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import project.android.course.quizer.R;
 
+// Activity used in startActivityForResult, it coordinates layout for editing course name and
+// description, only providing name is compulsory, description can be empty
 public class EditCourseActivity extends AppCompatActivity
 {
+    // Layout related variables
     private EditText courseName;
     private EditText courseDescription;
     private Button editButton;
-    private String oldCourseName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,8 +29,8 @@ public class EditCourseActivity extends AppCompatActivity
         editButton = findViewById(R.id.course_edit_button);
 
         Bundle courseInfo = getIntent().getExtras();
+        String oldCourseName = courseInfo.getString("courseName");
 
-        oldCourseName = courseInfo.getString("courseName");
         courseName.setText(oldCourseName);
         courseDescription.setText(courseInfo.getString("courseDescription"));
 
@@ -51,5 +52,4 @@ public class EditCourseActivity extends AppCompatActivity
             }
         });
     }
-    //TODO: PO edycji nazwy trzeba bedzie aktualizować subscribed courses i completed tests
 }

@@ -18,6 +18,7 @@ import java.util.List;
 import project.android.course.quizer.R;
 import project.android.course.quizer.firebaseObjects.CompletedTest;
 
+// Adapter for displaying test results, it contains the list of completed tests and displays them
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultViewHolder>
 {
     private final LayoutInflater inflater;
@@ -26,16 +27,16 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
 
     class ResultViewHolder extends RecyclerView.ViewHolder
     {
-        private TextView courseName;
-        private TextView testName;
-        private TextView testScore;
+        private TextView courseNameTextView;
+        private TextView testNameTextView;
+        private TextView testScoreTextView;
 
         public ResultViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            courseName = itemView.findViewById(R.id.result_course_name_tv);
-            testName = itemView.findViewById(R.id.result_test_name_tv);
-            testScore = itemView.findViewById(R.id.result_score_tv);
+            courseNameTextView = itemView.findViewById(R.id.result_course_name_text_view);
+            testNameTextView = itemView.findViewById(R.id.result_test_name_text_view);
+            testScoreTextView = itemView.findViewById(R.id.result_score_text_view);
         }
     }
 
@@ -46,8 +47,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
         results = new ArrayList<>();
     }
 
-
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
     public ResultsAdapter.ResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -56,20 +55,20 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
         return new ResultsAdapter.ResultViewHolder(itemView);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ResultsAdapter.ResultViewHolder holder, int position)
     {
         if(results != null)
         {
             CompletedTest current = results.get(position);
-            holder.courseName.setText(current.getCourseName());
-            holder.testName.setText(current.getTestName());
-            holder.testScore.setText(String.format("%d/%d", current.getScore(), current.getNumberOfQuestions()));
+            holder.courseNameTextView.setText(current.getCourseName());
+            holder.testNameTextView.setText(current.getTestName());
+            holder.testScoreTextView.setText(String.format("%d/%d",
+                    current.getScore(), current.getNumberOfQuestions()));
         }
     }
 
-    public void setCourses(QuerySnapshot snapshot)
+    public void setResults(QuerySnapshot snapshot)
     {
         List<DocumentSnapshot> documents = snapshot.getDocuments();
         this.results.clear();
@@ -78,7 +77,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
         notifyDataSetChanged();
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount()
     {

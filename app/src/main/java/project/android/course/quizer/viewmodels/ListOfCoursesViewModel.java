@@ -5,11 +5,12 @@ import androidx.lifecycle.ViewModel;
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 import project.android.course.quizer.repositories.ListOfCoursesRepository;
 
-public class AllCoursesViewModel extends ViewModel
+// ViewModel containing liveData to all courses
+public class ListOfCoursesViewModel extends ViewModel
 {
     private FirebaseQueryLiveData courses;
 
-    public AllCoursesViewModel()
+    public ListOfCoursesViewModel()
     {
         ListOfCoursesRepository repository = new ListOfCoursesRepository();
         courses = repository.getCourses();

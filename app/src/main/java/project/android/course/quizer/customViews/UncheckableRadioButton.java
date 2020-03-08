@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatRadioButton;
 
+// Custom class for RadioButton that can be unchecked
 public class UncheckableRadioButton extends AppCompatRadioButton
 {
 

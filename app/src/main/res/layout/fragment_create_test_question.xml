@@ -6,30 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView5"
+    <EditText
+        android:id="@+id/question_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:lineSpacingExtra="24sp"
-        android:text="@string/create_test_question_prompt"
-        android:textSize="14sp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/create_test_question_hint"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_text_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="@string/create_test_question_prompt"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
         android:id="@+id/textView7"
@@ -41,10 +29,10 @@
         android:text="A)"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_question" />
+        app:layout_constraintTop_toBottomOf="@+id/question_edit_text" />
 
     <EditText
-        android:id="@+id/edit_text_answer1"
+        android:id="@+id/answer_1_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -70,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <EditText
-        android:id="@+id/edit_text_answer2"
+        android:id="@+id/answer_2_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -108,17 +96,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <Button
-        android:id="@+id/button_save"
+        android:id="@+id/save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/button_next"
+        android:text="@string/next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_answer4" />
+        app:layout_constraintTop_toBottomOf="@+id/answer_4_edit_text" />
 
     <EditText
-        android:id="@+id/edit_text_answer3"
+        android:id="@+id/answer_3_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -132,7 +120,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView9" />
 
     <EditText
-        android:id="@+id/edit_text_answer4"
+        android:id="@+id/answer_4_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -151,10 +139,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="@string/create_test_correct"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_text_answer1"
-        app:layout_constraintStart_toEndOf="@+id/edit_text_answer1"
-        app:layout_constraintTop_toTopOf="@+id/edit_text_answer1" />
+        android:text="@string/correct"
+        app:layout_constraintBottom_toBottomOf="@+id/answer_1_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/answer_1_edit_text"
+        app:layout_constraintTop_toTopOf="@+id/answer_1_edit_text" />
 
     <CheckBox
         android:id="@+id/check_box_answer2"
@@ -162,10 +150,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="@string/create_test_correct"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_text_answer2"
-        app:layout_constraintStart_toEndOf="@+id/edit_text_answer2"
-        app:layout_constraintTop_toTopOf="@+id/edit_text_answer2" />
+        android:text="@string/correct"
+        app:layout_constraintBottom_toBottomOf="@+id/answer_2_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/answer_2_edit_text"
+        app:layout_constraintTop_toTopOf="@+id/answer_2_edit_text" />
 
     <CheckBox
         android:id="@+id/check_box_answer3"
@@ -173,10 +161,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="@string/create_test_correct"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_text_answer3"
-        app:layout_constraintStart_toEndOf="@+id/edit_text_answer3"
-        app:layout_constraintTop_toTopOf="@+id/edit_text_answer3" />
+        android:text="@string/correct"
+        app:layout_constraintBottom_toBottomOf="@+id/answer_3_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/answer_3_edit_text"
+        app:layout_constraintTop_toTopOf="@+id/answer_3_edit_text" />
 
     <CheckBox
         android:id="@+id/check_box_answer4"
@@ -184,8 +172,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="@string/create_test_correct"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_text_answer4"
-        app:layout_constraintStart_toEndOf="@+id/edit_text_answer4"
-        app:layout_constraintTop_toTopOf="@+id/edit_text_answer4" />
+        android:text="@string/correct"
+        app:layout_constraintBottom_toBottomOf="@+id/answer_4_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/answer_4_edit_text"
+        app:layout_constraintTop_toTopOf="@+id/answer_4_edit_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

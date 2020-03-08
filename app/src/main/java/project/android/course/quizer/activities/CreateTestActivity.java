@@ -24,17 +24,27 @@ import project.android.course.quizer.firebaseObjects.Test;
 import project.android.course.quizer.fragments.CreateQuestionFragment;
 import project.android.course.quizer.fragments.TestTitleFragment;
 
+// Activity coordinating test creation, it adds new fragments to the view pager, provides method to
+// navigate in view pager, stores data to write to database and executes write
 public class CreateTestActivity extends AppCompatActivity
 {
-    private static final String TAG = "DATABASE_TEST_ADDING";
-    private FirebaseFirestore mDatabase;
+    private static final String TAG = "CREATE_TEST_DEBUG";
+
+    // Firebase variables
+    private FirebaseFirestore database;
     private CollectionReference testsRef;
+
+    // Layout related variables
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private ViewPagerAdapter adapter;
+
+    // Variables holding data to save
     private ArrayList<Question> questions;
     private ArrayList<Answer> answers;
     private Test test;
-    private ViewPagerAdapter adapter;
+
+    // Variable to manage arrayList operations
     private int questionCount = 0;
 
 
@@ -42,18 +52,21 @@ public class CreateTestActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_test);
+        setContentView(R.layout.activity_view_pager);
 
         questions = new ArrayList<>();
         answers = new ArrayList<>();
 
-        mDatabase = FirebaseFirestore.getInstance();
-        testsRef = mDatabase.collection("Tests");
+        database = FirebaseFirestore.getInstance();
+        testsRef = database.collection("Tests");
 
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
+
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TestTitleFragment(getIntent().getExtras().getString("COURSENAME")), "Choose test name");
+        String courseName = getIntent().getExtras().getString("courseName");
+        adapter.addFragment(new TestTitleFragment(courseName), "Choose test name");
+
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -104,9 +117,14 @@ public class CreateTestActivity extends AppCompatActivity
         finish();
     }
 
+    public void moveToNextPage()
+    {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+    }
+
     private void executeBatchedWrite(Context context)
     {
-        WriteBatch batch = mDatabase.batch();
+        WriteBatch batch = database.batch();
         DocumentReference newTestDocument = testsRef.document(test.getTestName());
         batch.set(newTestDocument, test);
         CollectionReference testQuestionsRef = newTestDocument.collection("Questions");
@@ -128,12 +146,7 @@ public class CreateTestActivity extends AppCompatActivity
                         Toast.makeText(context, "Successfully added new test", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Couldn't add new test", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
+                    Log.d(TAG, "Adding new test failed\n" + e.toString());
                 });
-    }
-
-    public void moveToNextPage()
-    {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
 }

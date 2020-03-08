@@ -8,6 +8,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+// Adapter for viewPager it contains list of fragments and list of their titles
+// Using it new fragments can be added to the adapter so that it has dynamic behaviour depending on
+// actual needs in program
 public class ViewPagerAdapter extends FragmentPagerAdapter
 {
     private final List<Fragment> fragments = new ArrayList<>();

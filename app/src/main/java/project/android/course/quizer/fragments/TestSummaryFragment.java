@@ -14,11 +14,13 @@ import androidx.fragment.app.Fragment;
 import project.android.course.quizer.R;
 import project.android.course.quizer.activities.SolveTestActivity;
 
+// Fragment displaying information about results from test
 public class TestSummaryFragment extends Fragment
 {
     private TextView testNameTextView;
     private TextView scoreTextView;
     private Button endButton;
+
     private SolveTestActivity parentActivity;
 
     @Nullable
@@ -26,13 +28,15 @@ public class TestSummaryFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_test_summary, container, false);
-        testNameTextView = view.findViewById(R.id.test_name_tv);
-        scoreTextView = view.findViewById(R.id.score_tv);
-        endButton = view.findViewById(R.id.button_end);
+
+        testNameTextView = view.findViewById(R.id.test_name_text_view);
+        scoreTextView = view.findViewById(R.id.score_text_view);
+        endButton = view.findViewById(R.id.end_button);
+
         parentActivity = (SolveTestActivity) getActivity();
 
         testNameTextView.setText(parentActivity.getTestName());
-        scoreTextView.setText(String.format("%d / %d", parentActivity.getTestScore(), parentActivity.getNumOfQuestions()));
+        scoreTextView.setText(String.format("%d/%d", parentActivity.getTestScore(), parentActivity.getNumOfQuestions()));
 
         endButton.setOnClickListener(v -> parentActivity.finish());
 

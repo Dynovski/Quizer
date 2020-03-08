@@ -1,5 +1,6 @@
 package project.android.course.quizer.firebaseObjects;
 
+// Conversion class for courses from database to java code and the other way
 public class Course
 {
     private String courseName;

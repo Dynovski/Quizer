@@ -15,15 +15,17 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import project.android.course.quizer.R;
 
+// Activity coordinating password reset functionality, reset password email is sent to provided
+// email address
 public class ResetPasswordActivity extends BaseSignActionActivity implements View.OnClickListener
 {
-    private static final String TAG = "ResetPasswordLogging";
+    private static final String TAG = "RESET_PASSWORD_DEBUG";
 
     // Layout related variables
-    private EditText mEmailField;
+    private EditText emailEditText;
 
-    // Firebase instance variables
-    private FirebaseAuth mAuth;
+    // Firebase variables
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -31,13 +33,12 @@ public class ResetPasswordActivity extends BaseSignActionActivity implements Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        // Connecting layout variables with code
-        mEmailField = findViewById(R.id.edit_text_email);
+        emailEditText = findViewById(R.id.email_edit_text);
         setProgressBar(R.id.progressbar);
 
-        mAuth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.button_reset_password).setOnClickListener(this);
+        findViewById(R.id.reset_password_button).setOnClickListener(this);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ResetPasswordActivity extends BaseSignActionActivity implements Vie
     {
         switch(view.getId())
         {
-            case R.id.button_reset_password:
+            case R.id.reset_password_button:
                 if(resetPassword())
                 {
                     setResult(Activity.RESULT_OK);
@@ -57,7 +58,7 @@ public class ResetPasswordActivity extends BaseSignActionActivity implements Vie
 
     private boolean resetPassword()
     {
-        String email = mEmailField.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
 
         Log.d(TAG, "reset password for " + email);
 
@@ -66,13 +67,13 @@ public class ResetPasswordActivity extends BaseSignActionActivity implements Vie
 
         showProgressBar();
 
-        mAuth.sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful())
                     {
                         Log.d(TAG, "Reset password email sent");
                         finish();
-                        startActivity(new Intent(ResetPasswordActivity.this, SignInActivity.class));
+                        startActivity(new Intent(this, SignInActivity.class));
                     } else
                     {
                         Log.w(TAG, "Reset email creation failed", task.getException());
@@ -87,17 +88,17 @@ public class ResetPasswordActivity extends BaseSignActionActivity implements Vie
     {
         boolean valid = true;
 
-        String email = mEmailField.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
         if(email.isEmpty())
         {
-            mEmailField.setError("Email is required");
-            mEmailField.requestFocus();
+            emailEditText.setError("Email is required");
+            emailEditText.requestFocus();
             valid = false;
         }
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
-            mEmailField.setError("Please enter a valid email");
-            mEmailField.requestFocus();
+            emailEditText.setError("Please enter a valid email");
+            emailEditText.requestFocus();
             valid = false;
         }
 

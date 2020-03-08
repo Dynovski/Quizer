@@ -10,12 +10,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import project.android.course.quizer.R;
-import project.android.course.quizer.activities.BaseSignActionActivity;
-import project.android.course.quizer.activities.SignInActivity;
 import project.android.course.quizer.firebaseObjects.User;
 import project.android.course.quizer.singletons.CurrentUser;
 
@@ -27,12 +24,12 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
     private static final String TAG = "SIGN_UP_DEBUG";
 
     // Layout related variables
-    private EditText mEmailField;
-    private EditText mPasswordField;
+    private EditText emailEditText;
+    private EditText passwordEditText;
 
     // Firebase instance variables
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore mDatabase;
+    private FirebaseAuth auth;
+    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,17 +38,17 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
         setContentView(R.layout.activity_sign_up);
 
         // Connecting layout variables with code
-        mEmailField = findViewById(R.id.edit_text_email);
-        mPasswordField = findViewById(R.id.edit_text_password);
+        emailEditText = findViewById(R.id.email_edit_text);
+        passwordEditText = findViewById(R.id.password_edit_text);
         setProgressBar(R.id.progressbar);
 
         // Get Firebase instances
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
 
         // Adding actions to clickable elements
-        findViewById(R.id.button_sign_up).setOnClickListener(this);
-        findViewById(R.id.text_view_login_delegation).setOnClickListener(this);
+        findViewById(R.id.sign_up_button).setOnClickListener(this);
+        findViewById(R.id.login_text_view).setOnClickListener(this);
     }
 
     @Override
@@ -59,11 +56,11 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
     {
         switch(view.getId())
         {
-            case R.id.button_sign_up:
+            case R.id.sign_up_button:
                 hideKeyboard(view);
                 createAccount();
                 break;
-            case R.id.text_view_login_delegation:
+            case R.id.login_text_view:
                 finish();
                 startActivity(new Intent(this, SignInActivity.class));
                 break;
@@ -72,8 +69,8 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
 
     private void createAccount()
     {
-        String email = mEmailField.getText().toString().trim();
-        String password = mPasswordField.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
 
         Log.d(TAG, "createAccount for " + email);
 
@@ -82,17 +79,17 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
 
         showProgressBar();
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful())
                     {
                         Log.d(TAG, "User successfully created");
-                        // Adding new user to database with lowest privilege
-                        String userId = mAuth.getCurrentUser().getUid();
-                        String userEmail = mAuth.getCurrentUser().getEmail();
+                        // Adding new user to database with lowest privilege and no name
+                        String userId = auth.getCurrentUser().getUid();
+                        String userEmail = auth.getCurrentUser().getEmail();
                         User newUser = new User(2, "", userId, userEmail);
                         CurrentUser.logInUser(newUser);
-                        mDatabase.collection("Users").document(userId).set(newUser);
+                        database.collection("Users").document(userId).set(newUser);
                         finish();
                         startActivity(new Intent(this, StudentHomeScreenActivity.class));
                         startActivity(new Intent(this, UpdateAccountActivity.class));
@@ -100,9 +97,11 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
                     {
                         Log.w(TAG, "User creation failed", task.getException());
                         if(task.getException() instanceof FirebaseAuthUserCollisionException)
-                            Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.sign_up_already_registered,
+                                    Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(getApplicationContext(), "Couldn't create new account", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.sign_up_failed,
+                                    Toast.LENGTH_SHORT).show();
                     }
                     hideProgressBar();
                 });
@@ -113,33 +112,33 @@ public class SignUpActivity extends BaseSignActionActivity implements View.OnCli
     {
         boolean valid = true;
 
-        String email = mEmailField.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
         if(email.isEmpty())
         {
-            mEmailField.setError("Email is required");
-            mEmailField.requestFocus();
+            emailEditText.setError("Email is required");
+            emailEditText.requestFocus();
             valid = false;
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
-            mEmailField.setError("Please enter a valid email");
-            mEmailField.requestFocus();
+            emailEditText.setError("Please enter a valid email");
+            emailEditText.requestFocus();
             valid = false;
         }
 
-        String password = mPasswordField.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
         if(password.isEmpty())
         {
-            mPasswordField.setError("Password is required");
-            mPasswordField.requestFocus();
+            passwordEditText.setError("Password is required");
+            passwordEditText.requestFocus();
             valid = false;
         }
 
         if(password.length() < 6)
         {
-            mPasswordField.setError("Password must be at least 6 characters");
-            mPasswordField.requestFocus();
+            passwordEditText.setError("Password must be at least 6 characters");
+            passwordEditText.requestFocus();
             valid = false;
         }
 

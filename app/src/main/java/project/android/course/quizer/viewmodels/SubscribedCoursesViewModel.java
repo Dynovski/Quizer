@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 import project.android.course.quizer.repositories.SubscribedCoursesRepository;
 
+// ViewModel containing liveData to currently logged in user's subscribed courses
 public class SubscribedCoursesViewModel extends ViewModel
 {
     private FirebaseQueryLiveData courses;

@@ -11,20 +11,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/create_test_choose_name"
+        android:text="@string/create_test_name_prompt"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edit_text_test_name"
+        android:id="@+id/test_name_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="center"
-        android:hint="@string/create_test_test_name_hint"
+        android:hint="@string/create_test_name_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
@@ -35,14 +35,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/create_test_choose_due_date"
+        android:text="@string/create_test_date_prompt"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_test_name"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_test_name"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_test_name" />
+        app:layout_constraintEnd_toEndOf="@+id/test_name_edit_text"
+        app:layout_constraintStart_toStartOf="@+id/test_name_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/test_name_edit_text" />
 
     <EditText
-        android:id="@+id/edit_text_test_due_date"
+        android:id="@+id/test_deadline_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -61,22 +61,22 @@
         android:layout_marginTop="24dp"
         android:text="@string/create_test_num_of_questions"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_test_due_date"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_test_due_date"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_test_due_date" />
+        app:layout_constraintEnd_toEndOf="@+id/test_deadline_edit_text"
+        app:layout_constraintStart_toStartOf="@+id/test_deadline_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/test_deadline_edit_text" />
 
     <Button
-        android:id="@+id/button_save"
+        android:id="@+id/save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/button_next"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_num_of_questions"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_num_of_questions"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_num_of_questions" />
+        android:text="@string/next"
+        app:layout_constraintEnd_toEndOf="@+id/num_of_questions_edit_text"
+        app:layout_constraintStart_toStartOf="@+id/num_of_questions_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/num_of_questions_edit_text" />
 
     <EditText
-        android:id="@+id/edit_text_num_of_questions"
+        android:id="@+id/num_of_questions_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

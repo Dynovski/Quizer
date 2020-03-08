@@ -1,5 +1,6 @@
 package project.android.course.quizer.firebaseObjects;
 
+// Conversion class for users from database to java code and the other way
 public class User
 {
     private int privilegeLevel;

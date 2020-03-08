@@ -19,6 +19,8 @@ import project.android.course.quizer.R;
 import project.android.course.quizer.activities.SolveTestActivity;
 import project.android.course.quizer.firebaseObjects.Test;
 
+// Adapter for displaying test tests to do by the user, it contains the list of tests to do
+// and displays them, it also sets OnClickListener to begin solving given test
 public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.TestViewHolder>
 {
     private final LayoutInflater inflater;
@@ -33,8 +35,8 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
         public TestViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.text_view_test_name);
-            beginTestTextView = itemView.findViewById(R.id.text_view_start_test);
+            nameTextView = itemView.findViewById(R.id.test_name_text_view);
+            beginTestTextView = itemView.findViewById(R.id.start_test_text_view);
         }
 
     }
@@ -46,7 +48,6 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
         testsToDo = new ArrayList<>();
     }
 
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
     public ToDoTestsAdapter.TestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -55,7 +56,6 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
         return new ToDoTestsAdapter.TestViewHolder(itemView);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ToDoTestsAdapter.TestViewHolder holder, int position)
     {
@@ -66,11 +66,11 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
 
             holder.beginTestTextView.setOnClickListener(v -> {
                 Intent solveTestIntent = new Intent(applicationContext, SolveTestActivity.class);
-                solveTestIntent.putExtra("TESTNAME", current.getTestName());
-                solveTestIntent.putExtra("NUMOFQUESTIONS", current.getNumOfQuestions());
-                solveTestIntent.putExtra("DEADLINE", current.getDueDate());
-                solveTestIntent.putExtra("COURSENAME", current.getCourseName());
-               applicationContext.startActivity(solveTestIntent);
+                solveTestIntent.putExtra("testName", current.getTestName());
+                solveTestIntent.putExtra("numOfQuestions", current.getNumOfQuestions());
+                solveTestIntent.putExtra("deadline", current.getDueDate());
+                solveTestIntent.putExtra("courseName", current.getCourseName());
+                applicationContext.startActivity(solveTestIntent);
             });
         }
     }
@@ -90,7 +90,6 @@ public class ToDoTestsAdapter extends RecyclerView.Adapter<ToDoTestsAdapter.Test
         notifyDataSetChanged();
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount()
     {

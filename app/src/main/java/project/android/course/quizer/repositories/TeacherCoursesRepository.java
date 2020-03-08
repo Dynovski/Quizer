@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 
+// Repository containing liveData to courses created by given teacher
 public class TeacherCoursesRepository
 {
     private static final CollectionReference COURSES_REFERENCE =

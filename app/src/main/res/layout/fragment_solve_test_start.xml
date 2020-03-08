@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text_view_test_name"
+        android:id="@+id/test_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -24,12 +24,12 @@
         android:layout_marginTop="32dp"
         android:text="@string/solve_test_number_of_questions"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/text_view_test_name"
-        app:layout_constraintStart_toStartOf="@+id/text_view_test_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_test_name" />
+        app:layout_constraintEnd_toEndOf="@+id/test_name_text_view"
+        app:layout_constraintStart_toStartOf="@+id/test_name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/test_name_text_view" />
 
     <TextView
-        android:id="@+id/text_view_num_of_questions"
+        android:id="@+id/num_of_questions_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -46,12 +46,12 @@
         android:layout_marginTop="24dp"
         android:text="@string/solve_test_deadline"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/text_view_num_of_questions"
-        app:layout_constraintStart_toStartOf="@+id/text_view_num_of_questions"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_num_of_questions" />
+        app:layout_constraintEnd_toEndOf="@+id/num_of_questions_text_view"
+        app:layout_constraintStart_toStartOf="@+id/num_of_questions_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/num_of_questions_text_view" />
 
     <TextView
-        android:id="@+id/text_view_deadline"
+        android:id="@+id/deadline_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -62,12 +62,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <Button
-        android:id="@+id/button_begin_test"
+        android:id="@+id/begin_test_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="@string/begin_test"
-        app:layout_constraintEnd_toEndOf="@+id/text_view_deadline"
-        app:layout_constraintStart_toStartOf="@+id/text_view_deadline"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_deadline" />
+        app:layout_constraintEnd_toEndOf="@+id/deadline_text_view"
+        app:layout_constraintStart_toStartOf="@+id/deadline_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/deadline_text_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,29 +1,16 @@
 package project.android.course.quizer.activities;
 
-import androidx.annotation.Nullable;
+import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import project.android.course.quizer.R;
-import project.android.course.quizer.firebaseObjects.User;
 import project.android.course.quizer.singletons.CurrentUser;
 
-// Activity coordinating account information display and editing
+// Activity coordinating account information display
 public class UserAccountActivity extends AppCompatActivity
 {
-    private static final String TAG = "USER_ACCOUNT_DEBUG";
-
-    // Request codes
-    private static final int UPDATE_ACCOUNT_REQUEST_CODE = 1;
-
     // Layout related variables
     private TextView nameTextView;
     private TextView emailTextView;

@@ -1,91 +1,87 @@
 package project.android.course.quizer.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import project.android.course.quizer.R;
-import project.android.course.quizer.adapters.CourseAdapter;
 import project.android.course.quizer.adapters.ToDoTestsAdapter;
-import project.android.course.quizer.firebaseObjects.Course;
-import project.android.course.quizer.repositories.CompletedTestsRepository;
 import project.android.course.quizer.singletons.CurrentUser;
 import project.android.course.quizer.viewmodels.CompletedTestViewModel;
 import project.android.course.quizer.viewmodels.SubscribedCoursesViewModel;
-import project.android.course.quizer.viewmodels.TeacherCoursesViewModel;
 
+// Activity coordinating the display of tests to be finished by the user, it checks the deadline for
+// the test and if the test was already done by the user, then it displays tests that are valid
+// and user can begin the test
 public class TestsToDoActivity extends AppCompatActivity
 {
     private static final String TAG = "TESTS_TO_DO_DEBUG";
+
     private ToDoTestsAdapter adapter;
     private CompletedTestViewModel completedTestViewModel;
     private SubscribedCoursesViewModel subscribedCoursesViewModel;
+
+    private FirebaseFirestore database;
+
     private List<String> subscribedCourses = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_of_courses_acitvity);
+        setContentView(R.layout.activity_recycler_view);
 
-//        FirebaseFirestore.getInstance().collection("Users").document(CurrentUser.getCurrentUser().getUserId())
-//                .collection("SubscribedCourses").get()
-//                .addOnSuccessListener(this::setSubscribedCourses);
+        database = FirebaseFirestore.getInstance();
 
         subscribedCoursesViewModel = new ViewModelProvider(this).get(SubscribedCoursesViewModel.class);
         subscribedCoursesViewModel.getCourses().observe(this, this::setSubscribedCourses);
 
-        RecyclerView recyclerView = findViewById(R.id.coursesRecycleView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ToDoTestsAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        FirebaseFirestore.getInstance().collection("Users").document(CurrentUser.getCurrentUser().getUserId())
+        // Checking if user has any completed tests (if not completed tests listener won't work)
+        // If not then adapter must be populated with all the valid and subscribed tests
+        database.collection("Users").document(CurrentUser.getCurrentUser().getUserId())
                 .collection("CompletedTests").limit(1).get().addOnSuccessListener(queryDocumentSnapshots -> {
-                    if(queryDocumentSnapshots.getDocuments().isEmpty())
-                    {
-                        FirebaseFirestore.getInstance().collection("Tests").whereGreaterThan("dueDate",
-                                new Timestamp(new Date())).get()
-                                .addOnSuccessListener(queryDocumentSnapshots1 -> {
-                                    List<DocumentSnapshot> validTests = queryDocumentSnapshots1.getDocuments();
-                                    ArrayList<DocumentSnapshot> testsToDo = new ArrayList<>();
-                                    for(DocumentSnapshot test : validTests)
-                                    {
-                                        String courseName = test.get("courseName").toString();
-                                        if(subscribedCourses.contains(courseName))
-                                            testsToDo.add(test);
-                                    }
-                                    adapter.setTestsToDo(testsToDo);
-                                })
-                                .addOnFailureListener(e -> Log.d(TAG, "onCreate: " + e.toString()));
-                    }
-                });
+            if(queryDocumentSnapshots.getDocuments().isEmpty())
+            {
+                database.collection("Tests").whereGreaterThan("dueDate",
+                        new Timestamp(new Date())).get()
+                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            List<DocumentSnapshot> validTests = queryDocumentSnapshots1.getDocuments();
+                            ArrayList<DocumentSnapshot> testsToDo = new ArrayList<>();
+                            for(DocumentSnapshot test : validTests)
+                            {
+                                String courseName = test.get("courseName").toString();
+                                if(subscribedCourses.contains(courseName))
+                                    testsToDo.add(test);
+                            }
+                            adapter.setTestsToDo(testsToDo);
+                        })
+                        .addOnFailureListener(e -> Log.d(TAG, "Couldn't fetch valid tests\n" + e.toString()));
+            }
+        });
 
+        // Each time completed tests changes populate adapter with valid tests
         completedTestViewModel = new ViewModelProvider(this).get(CompletedTestViewModel.class);
         completedTestViewModel.getCompletedTests().observe(this, queryDocumentSnapshots -> {
-            FirebaseFirestore.getInstance().collection("Tests").whereGreaterThan("dueDate",
+            database.collection("Tests").whereGreaterThan("dueDate",
                     new Timestamp(new Date())).get()
                     .addOnSuccessListener(queryDocumentSnapshots1 -> {
                         List<DocumentSnapshot> validTests = queryDocumentSnapshots1.getDocuments();
@@ -107,9 +103,7 @@ public class TestsToDoActivity extends AppCompatActivity
                         }
                         adapter.setTestsToDo(testsToDo);
                     })
-                    .addOnFailureListener(e -> {
-                        e.printStackTrace();
-                    });
+                    .addOnFailureListener(e -> Log.d(TAG, "Couldn't fetch valid tests\n" + e.toString()));
         });
     }
 

@@ -19,7 +19,7 @@
         app:rowCount="4">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/all_courses_card"
+            android:id="@+id/list_of_courses_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/student_home_screen_course_list"
+                    android:text="@string/home_screen_all_courses"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
@@ -58,7 +58,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/student_courses_card"
+            android:id="@+id/subscribed_courses_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/student_home_screen_courses"
+                    android:text="@string/home_screen_my_courses"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
@@ -125,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/student_home_screen_to_do_tests"
+                    android:text="@string/home_screen_tests_to_do"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/student_home_screen_results"
+                    android:text="@string/home_screen_results"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 
+// Repository containing liveData to currently logged in user's subscribed courses
 public class SubscribedCoursesRepository
 {
     private static final CollectionReference USERS_SUBSCRIBED_COURSES_REFERENCE =

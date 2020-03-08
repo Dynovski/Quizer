@@ -1,12 +1,10 @@
 package project.android.course.quizer.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -24,6 +22,10 @@ import project.android.course.quizer.activities.TeacherCoursesActivity;
 import project.android.course.quizer.firebaseObjects.Course;
 import project.android.course.quizer.fragments.CourseDetailsDialogFragment;
 
+// Adapter for displaying courses using one TextView, it contains the list of courses,
+// displays them and sets onClickListeners, it checks what user type is using it and allows teachers
+// to perform more actions on items than students, students can only see detailed information about
+// courses, teachers can edit, delete them or create tests for given course
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder>
 {
     private final LayoutInflater inflater;
@@ -33,12 +35,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     class CourseViewHolder extends RecyclerView.ViewHolder
     {
-        private final TextView name;
+        private final TextView nameTextView;
 
         public CourseViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            name = itemView.findViewById(R.id.text_view_course_name);
+            nameTextView = itemView.findViewById(R.id.course_name_text_view);
         }
     }
 
@@ -49,29 +51,26 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         courses = new ArrayList<>();
     }
 
-
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
     public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View itemView = inflater.inflate(R.layout.course_item_teacher, parent, false);
+        View itemView = inflater.inflate(R.layout.simple_course_item, parent, false);
         return new CourseViewHolder(itemView);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position)
     {
         if(courses != null)
         {
             Course current = courses.get(position);
-            holder.name.setText(current.getCourseName());
+            holder.nameTextView.setText(current.getCourseName());
 
-            holder.itemView.setOnClickListener( v -> Toast.makeText(context, "ShortClicked", Toast.LENGTH_SHORT).show());
             holder.itemView.setOnClickListener(v -> {
                 DialogFragment newFragment = new CourseDetailsDialogFragment(current);
-                newFragment.show(((FragmentActivity)context).getSupportFragmentManager(), current.getCourseName() + "DetailDialog");
+                newFragment.show(((FragmentActivity) context).getSupportFragmentManager(),
+                        current.getCourseName() + "DetailDialog");
             });
 
             if(context instanceof TeacherCoursesActivity)
@@ -106,7 +105,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         return selectedCourse;
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount()
     {

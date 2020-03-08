@@ -2,6 +2,7 @@ package project.android.course.quizer.firebaseObjects;
 
 import com.google.firebase.Timestamp;
 
+// Conversion class for completed tests from database to java code and the other way
 public class CompletedTest
 {
     private String testName;
@@ -10,6 +11,7 @@ public class CompletedTest
     private int score;
     private Timestamp finishDate;
 
+    // Empty constructor needed by Firebase
     CompletedTest() {}
 
     public CompletedTest(String testName, String courseName, int numberOfQuestions, int score, Timestamp finishDate)

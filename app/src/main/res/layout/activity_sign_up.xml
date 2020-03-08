@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
-        android:text="@string/sign_up_label"
+        android:text="@string/registration_prompt"
         android:textColor="#fff"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -51,18 +51,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:labelFor="@id/edit_text_email"
-                android:text="@string/sign_email" />
+                android:labelFor="@id/email_edit_text"
+                android:text="@string/email" />
 
             <EditText
-                android:id="@+id/edit_text_email"
+                android:id="@+id/email_edit_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/ic_email_grey_24dp"
                 android:drawableLeft="@drawable/ic_email_grey_24dp"
                 android:drawablePadding="10dp"
-                android:hint="@string/sign_example_email"
+                android:hint="@string/example_email"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:singleLine="true" />
@@ -71,24 +71,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:labelFor="@id/edit_text_password"
-                android:text="@string/sign_password" />
+                android:labelFor="@id/password_edit_text"
+                android:text="@string/password" />
 
             <EditText
-                android:id="@+id/edit_text_password"
+                android:id="@+id/password_edit_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_lock_grey_24dp"
                 android:drawableLeft="@drawable/ic_lock_grey_24dp"
                 android:drawablePadding="10dp"
-                android:hint="@string/sign_password"
+                android:hint="@string/password"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:singleLine="true" />
 
 
             <Button
-                android:id="@+id/button_sign_up"
+                android:id="@+id/sign_up_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="22dp"
@@ -99,29 +99,18 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/text_view_login_delegation"
+                android:id="@+id/login_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/sign_up_sign_in_delegation"
+                android:text="@string/login_here"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
         </LinearLayout>
 
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/user_profile_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/sign_up_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
-        app:layout_constraintStart_toStartOf="@+id/relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_label" />
-
-<!--    android:background="@drawable/user_profile_image_background"-->
+    <!--    android:background="@drawable/user_profile_image_background"-->
 <!--    android:src="@drawable/ic_boy"-->
 
     <ProgressBar

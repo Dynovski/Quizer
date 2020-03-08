@@ -26,29 +26,40 @@ import project.android.course.quizer.fragments.SolveQuestionFragment;
 import project.android.course.quizer.fragments.TestStartFragment;
 import project.android.course.quizer.fragments.TestSummaryFragment;
 
+// Activity coordinating test solving display, it loads data from database to RAM and displays it
+// using view pager, user can therefore go back to the previous questions and change answers before
+// finishing test, then in checks answers and displays result in summary fragment
 public class SolveTestActivity extends AppCompatActivity
 {
     private static final String TAG = "DATABASE_TEST_SOLVING";
+
+    // Firebase variables
     private FirebaseFirestore database;
     private CollectionReference testsRef;
     private CollectionReference resultsRef;
     private CollectionReference completedTestsRef;
+
+    // Layout related variables
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private ViewPagerAdapter adapter;
+
+    // Variables holding data to display
     private ArrayList<Question> questions;
     private ArrayList<Answer> answers;
-    private ViewPagerAdapter adapter;
+
+    // Help variables
     private String testName;
+    private String courseName;
     private int numOfQuestions;
     private Timestamp deadline;
     private int testScore = 0;
-    private String courseName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_test);
+        setContentView(R.layout.activity_view_pager);
 
         database = FirebaseFirestore.getInstance();
         testsRef = database.collection("Tests");
@@ -56,13 +67,17 @@ public class SolveTestActivity extends AppCompatActivity
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("Results");
         completedTestsRef = database.collection("Users")
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("CompletedTests");
+
         Bundle receivedBundle = getIntent().getExtras();
         assert(receivedBundle != null);
-        testName = receivedBundle.getString("TESTNAME");
-        courseName = receivedBundle.getString("COURSENAME");
-        numOfQuestions = receivedBundle.getInt("NUMOFQUESTIONS");
-        deadline = (Timestamp) receivedBundle.get("DEADLINE");
 
+        testName = receivedBundle.getString("testName");
+        courseName = receivedBundle.getString("courseName");
+        numOfQuestions = receivedBundle.getInt("numOfQuestions");
+        deadline = (Timestamp) receivedBundle.get("deadline");
+
+        // Creating ArrayLists with specific size to make it possible for asynchronous queries
+        // to safely run without worrying about getting results in random order
         questions = new ArrayList<>(Arrays.asList(new Question[numOfQuestions]));
         answers = new ArrayList<>(Arrays.asList(new Answer[4 * numOfQuestions]));
 
@@ -92,15 +107,17 @@ public class SolveTestActivity extends AppCompatActivity
                                     {
                                         answers.set(4 * finalI + j++, answerDocument.toObject(Answer.class));
                                     }
-                                    Log.d(TAG, "getTestDataFromDatabase: Successfully retrieved answers for question " + finalI);
+                                    Log.d(TAG, "Successfully retrieved answers for question " + finalI);
                                 })
-                                .addOnFailureListener(e -> Log.d(TAG, "getTestDataFromDatabase: Couldn't retrieve answers for question " + finalI + "\n"
+                                .addOnFailureListener(e ->
+                                        Log.d(TAG, "Couldn't retrieve answers for question " + finalI + "\n"
                                         + e.toString()));
                         i++;
                     }
-                    Log.d(TAG, "getTestDataFromDatabase: Successfully retrieved all questions and answers");
+                    Log.d(TAG, "Successfully retrieved all questions and answers");
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "getTestDataFromDatabase: Couldn't retrieve questions and answers\n" + e.toString()));
+                .addOnFailureListener(e -> Log.d(TAG, "Couldn't retrieve questions and answers\n"
+                        + e.toString()));
     }
 
     public void moveToNextPage()
@@ -115,6 +132,31 @@ public class SolveTestActivity extends AppCompatActivity
             adapter.addFragment(new SolveQuestionFragment(i++), "Question " + i);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    public void checkTest()
+    {
+        for(int i = 1; i < adapter.getCount(); i++)
+        {
+            if(((SolveQuestionFragment)adapter.getItem(i)).answersCorrect())
+                ++testScore;
+        }
+
+        completedTestsRef.document().set(new CompletedTest(testName, courseName, numOfQuestions, testScore, new Timestamp(new Date())))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully added completed test"))
+                .addOnFailureListener(e -> Log.d(TAG, "Couldn't add completed test\n" + e.toString()));
+    }
+
+    public void addSummaryFragment()
+    {
+        adapter.addFragment(new TestSummaryFragment(), "Test Summary");
+        adapter.notifyDataSetChanged();
+        moveToNextPage();
+    }
+
+    public boolean testStarted()
+    {
+        return adapter.getCount() > 1;
     }
 
     public String getTestName()
@@ -145,30 +187,5 @@ public class SolveTestActivity extends AppCompatActivity
     public int getTestScore()
     {
         return testScore;
-    }
-
-    public void checkTest()
-    {
-        for(int i = 1; i < adapter.getCount(); i++)
-        {
-            if(((SolveQuestionFragment)adapter.getItem(i)).answersCorrect())
-                ++testScore;
-        }
-
-        completedTestsRef.document().set(new CompletedTest(testName, courseName, numOfQuestions, testScore, new Timestamp(new Date())))
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Successfully added completed test entry"))
-                .addOnFailureListener(e -> Log.d(TAG, "Couldn't add completed test\n" + e.toString()));
-    }
-
-    public void addSummaryFragment()
-    {
-        adapter.addFragment(new TestSummaryFragment(), "Test Summary");
-        adapter.notifyDataSetChanged();
-        moveToNextPage();
-    }
-
-    public boolean testStarted()
-    {
-        return adapter.getCount() > 1;
     }
 }

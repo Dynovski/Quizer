@@ -22,13 +22,15 @@ import project.android.course.quizer.singletons.CurrentUser;
 public class SignInActivity extends BaseSignActionActivity implements View.OnClickListener
 {
     private static final String TAG = "SIGN_IN_DEBUG";
+
+    // Request codes
     static final int RESET_PASSWORD_REQUEST = 1;
 
     // Layout related variables
     private EditText emailEditText;
     private EditText passwordEditText;
 
-    // Firebase instance variables
+    // Firebase variables
     private FirebaseFirestore database;
     private FirebaseAuth auth;
 
@@ -38,19 +40,16 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        // Connecting layout variables with code
-        emailEditText = findViewById(R.id.edit_text_email);
-        passwordEditText = findViewById(R.id.edit_text_password);
+        emailEditText = findViewById(R.id.email_edit_text);
+        passwordEditText = findViewById(R.id.password_edit_text);
         setProgressBar(R.id.progressbar);
 
-        // Get Firebase instances
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
 
-        // Adding actions to clickable elements
-        findViewById(R.id.button_sign_in).setOnClickListener(this);
-        findViewById(R.id.text_view_register).setOnClickListener(this);
-        findViewById(R.id.text_view_forgot_password).setOnClickListener(this);
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.register_text_view).setOnClickListener(this);
+        findViewById(R.id.forgot_password_text_view).setOnClickListener(this);
     }
 
     @Override
@@ -71,15 +70,15 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
     {
         switch(view.getId())
         {
-            case R.id.text_view_register:
+            case R.id.register_text_view:
                 finish();
                 startActivity(new Intent(this, SignUpActivity.class));
                 break;
-            case R.id.button_sign_in:
+            case R.id.sign_in_button:
                 hideKeyboard(view);
                 login();
                 break;
-            case R.id.text_view_forgot_password:
+            case R.id.forgot_password_text_view:
                 startActivityForResult(new Intent(this, ResetPasswordActivity.class),
                         RESET_PASSWORD_REQUEST);
                 break;
@@ -93,9 +92,9 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
         if(requestCode == RESET_PASSWORD_REQUEST)
         {
             if(resultCode == RESULT_OK)
-                Toast.makeText(this, "Email pending...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.forgot_password_email_pending, Toast.LENGTH_SHORT).show();
             else if(resultCode == RESULT_CANCELED)
-                Toast.makeText(this, "Cancelled password reset", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.forgot_password_cancelled, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -121,7 +120,7 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
                     } else
                     {
                         Log.d(TAG, "Login failed", task.getException());
-                        Toast.makeText(SignInActivity.this, "Authorization failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignInActivity.this, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
                     }
                     hideProgressBar();
                 });
@@ -138,12 +137,14 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
                         switch(CurrentUser.getCurrentUser().getPrivilegeLevel())
                         {
                             case 1:
-                                Intent teacherIntent = new Intent(SignInActivity.this, TeacherHomeScreenActivity.class);
+                                Intent teacherIntent = new Intent(SignInActivity.this,
+                                        TeacherHomeScreenActivity.class);
                                 teacherIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(teacherIntent);
                                 break;
                             case 2:
-                                Intent studentIntent = new Intent(SignInActivity.this, StudentHomeScreenActivity.class);
+                                Intent studentIntent = new Intent(SignInActivity.this,
+                                        StudentHomeScreenActivity.class);
                                 studentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(studentIntent);
                                 break;
@@ -152,12 +153,12 @@ public class SignInActivity extends BaseSignActionActivity implements View.OnCli
                         }
                     } else
                     {
-                        Toast.makeText(SignInActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignInActivity.this, R.string.sign_in_user_not_exist,
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(SignInActivity.this, "Could not load read document", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
+                    Log.d(TAG, "Could not load read document" + e.toString());
                 });
     }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import project.android.course.quizer.firebaseObjects.FirebaseQueryLiveData;
 import project.android.course.quizer.repositories.CompletedTestsRepository;
 
+// ViewModel containing liveData to completed tests
 public class CompletedTestViewModel extends ViewModel
 {
     private FirebaseQueryLiveData completedTests;

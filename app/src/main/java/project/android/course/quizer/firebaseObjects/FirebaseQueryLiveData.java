@@ -5,19 +5,18 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
-
+// Custom class making liveData from Firebase queries that can be observed by other parts of application
 public class FirebaseQueryLiveData extends LiveData<QuerySnapshot>
 {
-    private static final String TAG = "FirebaseQueryLiveData";
+    private static final String TAG = "FIREBASE_LIVEDATA_DEBUG";
 
     private final Query query;
     private final MyValueEventListener listener = new MyValueEventListener();
