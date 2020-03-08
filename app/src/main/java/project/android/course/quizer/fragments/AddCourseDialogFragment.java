@@ -76,5 +76,4 @@ public class AddCourseDialogFragment extends DialogFragment
         return builder.create();
     }
 }
-//TODO: Naprawić wyświetlanie testów do uzupełnienia
 //Todo: Zrobić dodawanie pytań do testu dla nauczyciela, wtedy trzeba wybrać kilka z pytań do odrzucenia przed testem

@@ -76,7 +76,6 @@ public class SubscribeCourseAdapter extends RecyclerView.Adapter<SubscribeCourse
                 holder.enrolledInfo.setText(R.string.course_unsubscribe);
             else
                 holder.enrolledInfo.setText(R.string.course_subscribe);
-            //TODO: UPRZATNAC
             holder.enrolledInfo.setOnClickListener(v -> {
                 if(holder.enrolledInfo.getText().toString().equals(applicationContext.getResources().getString(R.string.course_subscribe)))
                 {

@@ -8,10 +8,11 @@ import project.android.course.quizer.repositories.CompletedTestsRepository;
 public class CompletedTestViewModel extends ViewModel
 {
     private FirebaseQueryLiveData completedTests;
+    private CompletedTestsRepository repository;
 
     public CompletedTestViewModel()
     {
-        CompletedTestsRepository repository = new CompletedTestsRepository();
+        repository = new CompletedTestsRepository();
         completedTests = repository.getCompletedTests();
     }
 

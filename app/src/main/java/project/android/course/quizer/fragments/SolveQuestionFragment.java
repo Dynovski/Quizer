@@ -2,7 +2,6 @@ package project.android.course.quizer.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,8 +56,6 @@ public class SolveQuestionFragment extends Fragment
             saveButton.setOnClickListener(v -> {
                 parentActivity.checkTest();
                 parentActivity.addSummaryFragment();
-                //TODO: zebrac dane i zapisac wynik, test umescic w wykonanych testach
-                //TODO: dialog czy napewno chce skonczyc
             });
         } else
         {
