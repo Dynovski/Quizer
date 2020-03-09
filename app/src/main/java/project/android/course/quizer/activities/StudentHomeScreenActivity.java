@@ -1,13 +1,10 @@
 package project.android.course.quizer.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -54,7 +51,8 @@ public class StudentHomeScreenActivity extends AppCompatActivity implements View
                     e.printStackTrace();
                 }
                 Intent intent = new Intent(this, SignInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 this.startActivity(intent);
                 Runtime.getRuntime().exit(0);
                 break;

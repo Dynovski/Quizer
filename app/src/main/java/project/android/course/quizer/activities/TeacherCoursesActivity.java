@@ -102,6 +102,7 @@ public class TeacherCoursesActivity extends AppCompatActivity implements PopupMe
                                                     Log.d(TAG, "Successfully deleted course from subscribed courses"))
                                             .addOnFailureListener(e ->
                                                     Log.d(TAG, "Couldn't delete course from subscribed courses\n" + e.toString()));
+                                    student.getReference().delete();
                                 }
                                 database.collection("Courses")
                                         .document(adapter.getSelectedCourse().getCourseName()).delete()
